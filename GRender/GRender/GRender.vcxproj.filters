@@ -1,0 +1,256 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;cxx;c;def</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h</Extensions>
+    </Filter>
+    <Filter Include="Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+      <Extensions>ui</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>moc;h;cpp</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Debug">
+      <UniqueIdentifier>{6a6d601b-c59a-41ff-ad61-cc1140b70ce9}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Release">
+      <UniqueIdentifier>{f5eb0f8f-96a8-4339-85f8-9fa3c2122bf9}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Render">
+      <UniqueIdentifier>{287d612c-8a91-4e75-8864-90143a10e74e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render\Comm">
+      <UniqueIdentifier>{1d35c843-a302-4d10-9d5f-7cf996da0602}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render\Core">
+      <UniqueIdentifier>{34ee8e93-3131-482c-aee7-32b356d52f1d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GRender.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_GRender.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_GRender.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\qrc_grender.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Core\Node.cpp">
+      <Filter>Render\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Core\Ref.cpp">
+      <Filter>Render\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Comm\MathFunction.cpp">
+      <Filter>Render\Comm</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Core\Camera.cpp">
+      <Filter>Render\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Core\Engine.cpp">
+      <Filter>Render\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Core\GLProgram.cpp">
+      <Filter>Render\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Core\GLProgramState.cpp">
+      <Filter>Render\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Core\Mesh.cpp">
+      <Filter>Render\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Core\MeshCommand.cpp">
+      <Filter>Render\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Core\MeshNode.cpp">
+      <Filter>Render\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Core\RenderCommand.cpp">
+      <Filter>Render\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Core\Renderer.cpp">
+      <Filter>Render\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Core\Scene.cpp">
+      <Filter>Render\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Core\Light.cpp">
+      <Filter>Render\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Comm\Utils.cpp">
+      <Filter>Render\Comm</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Comm\TimeUtils.cpp">
+      <Filter>Render\Comm</Filter>
+    </ClCompile>
+    <ClCompile Include="GLWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Core\GLProgramStateCache.cpp">
+      <Filter>Render\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Core\GLProgramCache.cpp">
+      <Filter>Render\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Core\Image.cpp">
+      <Filter>Render\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Core\Texture2D.cpp">
+      <Filter>Render\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\GLStateCache.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Core\CustomCommand.cpp">
+      <Filter>Render\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Core\GroupCommand.cpp">
+      <Filter>Render\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Core\AABB.cpp">
+      <Filter>Render\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Core\DrawNode.cpp">
+      <Filter>Render\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_GLWindow.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_GLWindow.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="GRender.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="GLWindow.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Resources\grender.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Resources\grender.qrc">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GeneratedFiles\ui_grender.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Comm\Macors.h">
+      <Filter>Render\Comm</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Comm\Math.h">
+      <Filter>Render\Comm</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Comm\Structure.h">
+      <Filter>Render\Comm</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Core\Node.h">
+      <Filter>Render\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Core\Ref.h">
+      <Filter>Render\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Comm\Utils.h">
+      <Filter>Render\Comm</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Comm\MathFunction.h">
+      <Filter>Render\Comm</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Core\Camera.h">
+      <Filter>Render\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Core\Engine.h">
+      <Filter>Render\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Core\GLProgram.h">
+      <Filter>Render\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Core\GLProgramState.h">
+      <Filter>Render\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Core\Mesh.h">
+      <Filter>Render\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Core\MeshCommand.h">
+      <Filter>Render\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Core\MeshNode.h">
+      <Filter>Render\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Core\RenderCommand.h">
+      <Filter>Render\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Core\Renderer.h">
+      <Filter>Render\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Core\Scene.h">
+      <Filter>Render\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Core\Light.h">
+      <Filter>Render\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Comm\TimeUtils.h">
+      <Filter>Render\Comm</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\GEngine.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Core\GLProgramStateCache.h">
+      <Filter>Render\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Core\GLProgramCache.h">
+      <Filter>Render\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Core\Image.h">
+      <Filter>Render\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Core\Texture2D.h">
+      <Filter>Render\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\GLStateCache.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\GDefine.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Core\CustomCommand.h">
+      <Filter>Render\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Core\GroupCommand.h">
+      <Filter>Render\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Core\AABB.h">
+      <Filter>Render\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Core\DrawNode.h">
+      <Filter>Render\Core</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
