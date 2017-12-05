@@ -23,11 +23,17 @@ GRender::GRender(QWidget *parent)
 
 		G::DrawNode *drawNode = new G::DrawNode();
 		drawNode->init(G::DrawNode::AXIS, nullptr);
-		drawNode->drawAxis(1.0f, 1.0f);
+		drawNode->drawAxis(1.0f, 2.0f);
 		drawNode->setPosition(G::Vec3(0, 0, 0));
-		drawNode->setScale(G::Vec3(100, 100, 100));
+		drawNode->setScale(G::Vec3(10, 10, 10));
 
 		scene->addChild(drawNode);
+
+
+		G::DrawNode *drawBox = new (std::nothrow) G::DrawNode();
+		drawBox->init(G::DrawNode::CUBE, nullptr);
+		drawBox->drawCube(G::Vec3(-1, -1, -1), G::Vec3(1, 1, 1));
+		scene->addChild(drawBox);
 
 		m_glWindow->getEngine()->runWithScene(scene);
 	});

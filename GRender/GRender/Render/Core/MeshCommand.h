@@ -40,8 +40,6 @@ public:
 	/**execute*/
 	void execute();
 
-
-
 protected:
 
 	/**apply render states*/
@@ -53,8 +51,6 @@ protected:
 	/**set lights uniforms*/
 	void setLightUniforms();
 	void resetLightUniforms();
-
-
 
 protected:
 

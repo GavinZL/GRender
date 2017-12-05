@@ -46,6 +46,9 @@ void GLWindow::initializeGL()
 	// OpenGL initialize
 	m_engine = G::Engine::getInstance();
 
+	//glEnable(GL_POLYGON_SMOOTH_HINT);
+	//glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
+
 	// let us put the timer update init to here
 	m_updateTimer = new QTimer(this);
 	m_updateTimer->setInterval(16); // f = 1 / 16.10e-3 = 60Hz

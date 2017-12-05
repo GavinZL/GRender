@@ -34,17 +34,6 @@ bool DrawNode::init(Type _type, void* params)
 	m_vertices.reserve(32);
 	m_colors.reserve(32);
 
-	_positionID = getGLProgram()->getAttributeLocation("G_position");
-	_colorID = getGLProgram()->getAttributeLocation("G_color");
-
-	G::log("P : %d , C : %d \n", _positionID, _colorID);
-	G::log("-------------------------------------\n");
-
-	_positionID = glGetAttribLocation(getGLProgram()->getProgram(), "G_position");
-	_colorID = glGetAttribLocation(getGLProgram()->getProgram(), "G_color");
-
-	G::log("P : %d , C : %d \n", _positionID, _colorID);
-
 	switch (_type)
 	{
 	case G::DrawNode::POINT:
@@ -70,37 +59,6 @@ bool DrawNode::init(Type _type, void* params)
 	default:
 		break;
 	}
-	/*
-	GLProgram *program = new (std::nothrow) GLProgram;
-
-	bool b = program->initProgramWithFile("shader/position_color_vert.shader", "shader/position_color_frag.shader");
-	bool c = program->link();
-	
-	_programId = program->getProgram();
-
-	_positionID = glGetAttribLocation(_programId, "G_position");
-
-	float arr[] = {
-		0.5, 0.5, 0, 1, 0.5, 0,
-		1, 0.5, 0, 0.8, 0.5, 0.2,
-		1, 0.5, 0, 0.8, 0.5, -0.2,
-
-		0, 0, 0, 0, 0.5, 0,
-		0, 0.5, 0, 0.2, 0.8, 0,
-		0, 0.5, 0, -0.2, 0.8, 0,
-
-		0, 0, 0, 0, 0, 0.5,
-		0, 0, 0.5, 0.2, 0, 0.8,
-		0, 0, 0.5, -0.2, 0, 0.8
-	};
-
-	glGenBuffers(1, &m_vertexBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(arr), &arr[0], GL_STATIC_DRAW);
-
-
-	m_initialized = true;
-	*/
 	return true;
 }
 
@@ -125,6 +83,10 @@ void DrawNode::onDraw(const Mat4& transform, unsigned int flags)
 
 	glProgram->setUniformLocationWith4f(glProgram->getUniformLocation(GLProgram::UNIFORM_NAME_DISPLAYCOLOR), 1.0f, 1.0f, 1.0f, 1.0f);
 
+	glPointSize(m_pointSize);
+	glLineWidth(m_lineWidth);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
 	glEnableVertexAttribArray(GLProgram::VERTEX_ATTRIBUTE_POSITION);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
 	glVertexAttribPointer(GLProgram::VERTEX_ATTRIBUTE_POSITION, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
@@ -133,10 +95,13 @@ void DrawNode::onDraw(const Mat4& transform, unsigned int flags)
 	glBindBuffer(GL_ARRAY_BUFFER, m_colorBuffer);
 	glVertexAttribPointer(GLProgram::VERTEX_ATTRIBUTE_COLOR, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
 
-	glDrawArrays(GL_LINES, 0, m_vertices.size());
+	glDrawArrays(m_type, 0, m_vertices.size());
 
 	glDisableVertexAttribArray(GLProgram::VERTEX_ATTRIBUTE_COLOR);
 	glDisableVertexAttribArray(GLProgram::VERTEX_ATTRIBUTE_POSITION);
+
+	glPointSize(1);
+	glLineWidth(1);
 }
 
 void DrawNode::drawPoint(const Vec3& point, const float ptSize, const Color4& color)
@@ -227,8 +192,7 @@ void DrawNode::drawLineLoop(const std::vector<Vec3>& vertices, const float lineS
 }
 
 void DrawNode::drawAxis(const float length, const float lineSize )
-{
-	
+{	
 	static std::vector<Vec3> v={
 		Vec3(0, 0, 0) * length, Vec3(1, 0, 0) * length,
 		Vec3(1, 0, 0) * length, Vec3(0.8, 0, 0.2) * length,
@@ -273,14 +237,159 @@ void DrawNode::drawAxis(const float length, const float lineSize )
 	m_initialized = true;
 }
 
-void DrawNode::drawBox(const float x_duration, const float y_duration, const float z_duration, const float lineSize)
+void DrawNode::drawBox(const Vec3& min, const Vec3& max, const float lineSize)
 {
+	m_lineWidth = lineSize;
 
+	m_vertices.resize(24);
+	//
+	m_vertices[0] = Vec3(min[0], min[1], min[2]);
+	m_vertices[1] = Vec3(min[0], min[1], max[2]);
+
+	m_vertices[2] = Vec3(min[0], min[1], min[2]);
+	m_vertices[3] = Vec3(max[0], min[1], min[2]);
+
+	m_vertices[4] = Vec3(min[0], min[1], min[2]);
+	m_vertices[5] = Vec3(min[0], max[1], min[2]);
+
+	//
+	m_vertices[6] = Vec3(max[0], min[1], max[2]);
+	m_vertices[7] = Vec3(min[0], min[1], max[2]);
+
+	m_vertices[8] = Vec3(max[0], min[1], max[2]);
+	m_vertices[9] = Vec3(max[0], max[1], max[2]);
+
+	m_vertices[10] = Vec3(max[0], min[1], max[2]);
+	m_vertices[11] = Vec3(max[0], min[1], min[2]);
+
+	//
+	m_vertices[12] = Vec3(min[0], max[1], max[2]);
+	m_vertices[13] = Vec3(min[0], min[1], max[2]);
+
+	m_vertices[14] = Vec3(min[0], max[1], max[2]);
+	m_vertices[15] = Vec3(min[0], max[1], min[2]);
+
+	m_vertices[16] = Vec3(min[0], max[1], max[2]);
+	m_vertices[17] = Vec3(max[0], max[1], max[2]);
+
+	// 
+	m_vertices[18] = Vec3(max[0], max[1], min[2]);
+	m_vertices[19] = Vec3(min[0], max[1], min[2]);
+
+	m_vertices[20] = Vec3(max[0], max[1], min[2]);
+	m_vertices[21] = Vec3(max[0], min[1], min[2]);
+
+	m_vertices[22] = Vec3(max[0], max[1], min[2]);
+	m_vertices[23] = Vec3(max[0], max[1], max[2]);
+
+	m_colors.resize(24);
+	m_colors[0] = Vec4(1, 1, 0, 1);
+	m_colors[1] = Vec4(1, 1, 0, 1);
+	m_colors[2] = Vec4(1, 1, 0, 1);
+	m_colors[3] = Vec4(1, 1, 0, 1);
+	m_colors[4] = Vec4(1, 1, 0, 1);
+	m_colors[5] = Vec4(1, 1, 0, 1);
+	m_colors[6] = Vec4(1, 1, 0, 1);
+	m_colors[7] = Vec4(1, 1, 0, 1);
+	m_colors[8] = Vec4(1, 1, 0, 1);
+	m_colors[9] = Vec4(1, 1, 0, 1);
+	m_colors[10] = Vec4(1, 1, 0, 1);
+	m_colors[11] = Vec4(1, 1, 0, 1);
+	m_colors[12] = Vec4(1, 1, 0, 1);
+	m_colors[13] = Vec4(1, 1, 0, 1);
+	m_colors[14] = Vec4(1, 1, 0, 1);
+	m_colors[15] = Vec4(1, 1, 0, 1);
+	m_colors[16] = Vec4(1, 1, 0, 1);
+	m_colors[17] = Vec4(1, 1, 0, 1);
+	m_colors[18] = Vec4(1, 1, 0, 1);
+	m_colors[19] = Vec4(1, 1, 0, 1);
+	m_colors[20] = Vec4(1, 1, 0, 1);
+	m_colors[21] = Vec4(1, 1, 0, 1);
+	m_colors[22] = Vec4(1, 1, 0, 1);
+	m_colors[23] = Vec4(1, 1, 0, 1);
+
+	glGenBuffers(1, &m_vertexBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vec3) * m_vertices.size(), &m_vertices[0], GL_STATIC_DRAW);
+
+	glGenBuffers(1, &m_colorBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, m_colorBuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vec4) * m_colors.size(), &m_colors[0], GL_STATIC_DRAW);
+
+	m_initialized = true;
 }
 
-void DrawNode::drawCube(const float x_duration, const float y_duration, const float z_duration)
+void DrawNode::drawCube(const Vec3& min, const Vec3& max)
 {
+	m_vertices.resize(36);
+	//
+	m_vertices[0] = Vec3(min[0], min[1], min[2]);
+	m_vertices[1] = Vec3(min[0], min[1], max[2]);
+	m_vertices[2] = Vec3(max[0], min[1], max[2]);
 
+	m_vertices[3] = Vec3(max[0], min[1], max[2]);
+	m_vertices[4] = Vec3(max[0], min[1], min[2]);
+	m_vertices[5] = Vec3(min[0], min[1], min[2]);
+
+	//
+	m_vertices[6] = Vec3(max[0], min[1], max[2]);
+	m_vertices[7] = Vec3(max[0], min[1], min[2]);
+	m_vertices[8] = Vec3(max[0], max[1], max[2]);
+
+	m_vertices[9] = Vec3(max[0], max[1], max[2]);
+	m_vertices[10] = Vec3(max[0], max[1], min[2]);
+	m_vertices[11] = Vec3(max[0], min[1], min[2]);
+
+	//
+	m_vertices[12] = Vec3(max[0], max[1], max[2]);
+	m_vertices[13] = Vec3(min[0], max[1], max[2]);
+	m_vertices[14] = Vec3(min[0], max[1], min[2]);
+
+	m_vertices[15] = Vec3(min[0], max[1], min[2]);
+	m_vertices[16] = Vec3(max[0], max[1], min[2]);
+	m_vertices[17] = Vec3(max[0], max[1], max[2]);
+
+	//// 
+	m_vertices[18] = Vec3(min[0], max[1], max[2]);
+	m_vertices[19] = Vec3(min[0], max[1], min[2]);
+	m_vertices[20] = Vec3(min[0], min[1], min[2]);
+
+	m_vertices[21] = Vec3(min[0], min[1], min[2]);
+	m_vertices[22] = Vec3(min[0], min[1], max[2]);
+	m_vertices[23] = Vec3(min[0], max[1], max[2]);
+
+	//
+	m_vertices[24] = Vec3(min[0], min[1], max[2]);
+	m_vertices[25] = Vec3(max[0], min[1], max[2]);
+	m_vertices[26] = Vec3(min[0], max[1], max[2]);
+
+	m_vertices[27] = Vec3(max[0], min[1], max[2]);
+	m_vertices[28] = Vec3(max[0], max[1], max[2]);
+	m_vertices[29] = Vec3(min[0], max[1], max[2]);
+
+	//
+	m_vertices[30] = Vec3(min[0], min[1], min[2]);
+	m_vertices[31] = Vec3(max[0], min[1], min[2]);
+	m_vertices[32] = Vec3(min[0], max[1], min[2]);
+
+	m_vertices[33] = Vec3(max[0], min[1], min[2]);
+	m_vertices[34] = Vec3(max[0], max[1], min[2]);
+	m_vertices[35] = Vec3(min[0], max[1], min[2]);
+
+	m_colors.resize(36);
+	for (int i = 0; i < 36; ++i){
+		m_colors[i] = Vec4(1, 1, 0, 1);
+	}
+
+	glGenBuffers(1, &m_vertexBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vec3) * m_vertices.size(), &m_vertices[0], GL_STATIC_DRAW);
+
+	glGenBuffers(1, &m_colorBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, m_colorBuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vec4) * m_colors.size(), &m_colors[0], GL_STATIC_DRAW);
+
+	m_initialized = true;
 }
 
 void DrawNode::drawSphere(const float raduis)

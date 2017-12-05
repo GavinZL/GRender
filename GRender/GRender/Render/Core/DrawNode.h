@@ -56,9 +56,9 @@ public:
 	void drawLineLoop(const std::vector<Vec3>& vertices, const float lineSize, const Color4& color);
 
 	void drawAxis(const float length, const float lineSize);
-	void drawBox(const float x_duration, const float y_duration, const float z_duration, const float lineSize);
+	void drawBox(const Vec3& min, const Vec3& max, const float lineSize);
 	
-	void drawCube(const float x_duration, const float y_duration, const float z_duration);
+	void drawCube(const Vec3& min, const Vec3& max);
 	void drawSphere(const float raduis);
 
 	void drawScanner();
@@ -90,13 +90,6 @@ protected:
 	float m_lineWidth;
 
 	CustomCommand m_customCommand;
-
-
-	/**Test buffer id*/
-	GLuint _positionID;
-	GLuint _colorID;
-
-	GLuint _programId;
 
 };
 
