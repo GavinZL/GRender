@@ -3,6 +3,8 @@
 
 #include <QtWidgets/QMainWindow>
 #include "ui_grender.h"
+#include <QDragEnterEvent>
+#include <QDropEvent>
 
 class GLWindow;
 
@@ -13,6 +15,10 @@ class GRender : public QMainWindow
 public:
 	GRender(QWidget *parent = 0);
 	~GRender();
+
+	// drag files in
+	void dragEnterEvent(QDragEnterEvent *event);
+	void dropEvent(QDropEvent *event);
 
 private:
 	Ui::GRenderClass ui;

@@ -171,8 +171,8 @@ bool GLProgram::initProgramWithFile(const std::string& vShader, const std::strin
 	const char* vendorName = reinterpret_cast<const char*>(glGetString(GL_VENDOR));
 	const char* version = reinterpret_cast<const char*>(glGetString(GL_VERSION));
 	
-	G::log("Vendor : %s \n", vendorName);
-	G::log("Version : %s\n", version);
+	//G::log("Vendor : %s \n", vendorName);
+	//G::log("Version : %s\n", version);
 
 	// 2.
 	m_vertShader = m_fragShader = 0;
@@ -182,7 +182,7 @@ bool GLProgram::initProgramWithFile(const std::string& vShader, const std::strin
 	std::string fSource = loadShaderFromFile(fShader);
 
 	//G::log("%s", vSource.c_str());
-	G::log("\n------------------------------------------------\n");
+	//G::log("\n------------------------------------------------\n");
 	//G::log("%s", fSource.c_str());
 
 	if (!vShader.empty()){

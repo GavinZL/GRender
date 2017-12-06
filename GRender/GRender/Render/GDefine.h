@@ -27,6 +27,4 @@ typedef void GLvoid;
 typedef char GLchar;
 
 
-
-
 #endif

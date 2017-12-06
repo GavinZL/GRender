@@ -58,25 +58,25 @@ GLProgramCache::~GLProgramCache()
 void GLProgramCache::loadDefaultGLPrograms()
 {
 	// ##position shader
-	//GLProgram *p = new (std::nothrow) GLProgram;
-	//this->loadDefaultGLProgram(p, Shader_Name_Position);
-	//m_programs.insert(std::make_pair(GLProgram::SHADER_NAME_POSITION, p));
+	GLProgram *p = new (std::nothrow) GLProgram;
+	this->loadDefaultGLProgram(p, Shader_Name_Position);
+	m_programs.insert(std::make_pair(GLProgram::SHADER_NAME_POSITION, p));
 
-	auto p = new (std::nothrow) GLProgram;
+	p = new (std::nothrow) GLProgram;
 	this->loadDefaultGLProgram(p, Shader_Name_Position_Color);
 	m_programs.insert(std::make_pair(GLProgram::SHADER_NAME_POSITION_COLOR, p));
 
-	//p = new (std::nothrow) GLProgram;
-	//this->loadDefaultGLProgram(p, Shader_Name_Position_Normal_Color);
-	//m_programs.insert(std::make_pair(GLProgram::SHADER_NAME_POSITION_NORMAL_COLOR, p));
+	p = new (std::nothrow) GLProgram;
+	this->loadDefaultGLProgram(p, Shader_Name_Position_Normal_Color);
+	m_programs.insert(std::make_pair(GLProgram::SHADER_NAME_POSITION_NORMAL_COLOR, p));
 
-	//p = new (std::nothrow) GLProgram;
-	//this->loadDefaultGLProgram(p, Shader_Name_Position_Texture_Color);
-	//m_programs.insert(std::make_pair(GLProgram::SHADER_NAME_POSITION_TEXTURE_COLOR, p ));
+	p = new (std::nothrow) GLProgram;
+	this->loadDefaultGLProgram(p, Shader_Name_Position_Texture_Color);
+	m_programs.insert(std::make_pair(GLProgram::SHADER_NAME_POSITION_TEXTURE_COLOR, p));
 
-	//p = new (std::nothrow) GLProgram;
-	//this->loadDefaultGLProgram(p, Shader_Name_Position_Normal_Texture_Color);
-	//m_programs.insert(std::make_pair(GLProgram::SHADER_NAME_POSITION_NORMAL_TEXTURE_COLOR, p));
+	p = new (std::nothrow) GLProgram;
+	this->loadDefaultGLProgram(p, Shader_Name_Position_Normal_Texture_Color);
+	m_programs.insert(std::make_pair(GLProgram::SHADER_NAME_POSITION_NORMAL_TEXTURE_COLOR, p));
 
 }
 

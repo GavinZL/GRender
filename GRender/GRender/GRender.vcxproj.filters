@@ -143,6 +143,9 @@
     <ClCompile Include="GeneratedFiles\Release\moc_GLWindow.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="Render\Core\IOManager.cpp">
+      <Filter>Render\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="GRender.h">
@@ -250,6 +253,9 @@
       <Filter>Render\Core</Filter>
     </ClInclude>
     <ClInclude Include="Render\Core\DrawNode.h">
+      <Filter>Render\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Core\IOManager.h">
       <Filter>Render\Core</Filter>
     </ClInclude>
   </ItemGroup>

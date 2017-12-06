@@ -594,12 +594,12 @@ void Node::onExit()
 }
 
 
-void Node::setDisplayColor(const Color3& color)
+void Node::setDisplayColor(const Color4& color)
 {
 	m_displayColor = color;
 }
 
-const Color3& Node::getDisplayColor() const
+const Color4& Node::getDisplayColor() const
 {
 	return m_displayColor;
 }
@@ -611,12 +611,12 @@ bool Node::getCascadeColorEnabled() const
 {
 	return m_cascadeColorEnabled;
 }
-void Node::updateDisplayColor(const Color3& parentColor)
+void Node::updateDisplayColor(const Color4& parentColor)
 {
 	m_displayColor(0) = m_displayColor(0) * parentColor(0);
 	m_displayColor(1) = m_displayColor(1) * parentColor(1);
 	m_displayColor(2) = m_displayColor(2) * parentColor(2);
-
+	m_displayColor(3) = m_displayColor(3) * parentColor(3);
 	updateColor();
 
 	if (m_cascadeColorEnabled){
@@ -628,7 +628,7 @@ void Node::updateDisplayColor(const Color3& parentColor)
 
 void Node::updateCascadeColor()
 {
-	Color3 parentColor(Vec3::Ones());
+	Color4 parentColor(Vec4::Ones());
 
 	if (m_parent && m_parent->getCascadeColorEnabled()){
 		parentColor = m_parent->getDisplayColor();

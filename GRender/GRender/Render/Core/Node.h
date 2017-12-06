@@ -277,11 +277,11 @@ public:
 	/**
 	 * display color
 	 */
-	virtual void setDisplayColor(const Color3& color);
-	virtual const Color3& getDisplayColor() const;
+	virtual void setDisplayColor(const Color4& color);
+	virtual const Color4& getDisplayColor() const;
 	virtual void setCascadeColorEnabled(bool cascadeEnabled);
 	virtual bool getCascadeColorEnabled() const;
-	virtual void updateDisplayColor(const Color3& parentColor);
+	virtual void updateDisplayColor(const Color4& parentColor);
 
 
 	virtual void updateColor(){};
@@ -361,7 +361,7 @@ protected:
 	GLProgramState *m_glProgramState;
 
 	// ##显示当前节点的颜色&&透明
-	Color3 m_displayColor;
+	Color4 m_displayColor;
 	float m_displayOpacity;
 	bool m_cascadeColorEnabled;
 

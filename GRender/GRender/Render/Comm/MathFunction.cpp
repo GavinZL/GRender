@@ -8,8 +8,8 @@
 
 #include "Utils.h"
 
-#include <QMatrix4x4>
-#include <QDebug>
+//#include <QMatrix4x4>
+//#include <QDebug>
 #include <iostream>
 
 
@@ -101,12 +101,12 @@ G::Mat4 createPerspectiveMatrix(float fieldOfView, float aspectRatio, float near
 	//_projection(2, 3) = -2.0f * farPlane * nearPlane * f_n;
 	//_projection(3, 2) = -1.0f;
 
-	std::cout << " ------------------------------- " << std::endl;
-	std::cout << _projection << std::endl;
-	std::cout << " ------------------------------- " << std::endl;
-	QMatrix4x4 mmt;
-	mmt.perspective(fieldOfView, aspectRatio, nearPlane, farPlane);
-	qDebug() << mmt;
+	//std::cout << " ------------------------------- " << std::endl;
+	//std::cout << _projection << std::endl;
+	//std::cout << " ------------------------------- " << std::endl;
+	//QMatrix4x4 mmt;
+	//mmt.perspective(fieldOfView, aspectRatio, nearPlane, farPlane);
+	//qDebug() << mmt;
 
 
 	return _projection;
