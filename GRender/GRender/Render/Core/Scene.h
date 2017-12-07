@@ -66,6 +66,7 @@ protected:
 	float m_yaw;
 
 	friend class Camera;
+	friend class Light;
 };
 
 NAMESPACE_END

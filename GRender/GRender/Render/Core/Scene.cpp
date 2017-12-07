@@ -4,6 +4,7 @@
 #include "Camera.h"
 #include "Engine.h"
 #include "Renderer.h"
+#include "Light.h"
 
 #include "../Comm/Utils.h"
 

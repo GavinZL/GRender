@@ -68,19 +68,7 @@ void GRender::dropEvent(QDropEvent *event)
 
 		if (pathList.size() > 0)
 		{
-			//MainModel::instance()->modelFileName = pathList.at(0);
-
-			//event->acceptProposedAction();
-
 			QString filePath = pathList.at(0);
-
-
-			//G::DrawNode *drawBox = new (std::nothrow) G::DrawNode();
-			//drawBox->init(G::DrawNode::CUBE, nullptr);
-			//drawBox->drawCube(G::Vec3(-10, -10, -10), G::Vec3(10, 10, 10));
-			//drawBox->setPosition(G::Vec3(100, 100, 100));
-			//m_glWindow->getEngine()->getRunningScene()->addChild(drawBox);
-
 			G::MeshNode *node = new (std::nothrow) G::MeshNode(filePath.toStdString());
 			if (node){
 				m_glWindow->getEngine()->getRunningScene()->addChild(node);

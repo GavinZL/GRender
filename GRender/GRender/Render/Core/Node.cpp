@@ -599,6 +599,14 @@ void Node::setDisplayColor(const Color4& color)
 	m_displayColor = color;
 }
 
+void Node::setDisplayColor(const Color3& color)
+{
+	m_displayColor[0] = color[0];
+	m_displayColor[1] = color[1];
+	m_displayColor[2] = color[2];
+	m_displayColor[3] = 1.0f;
+}
+
 const Color4& Node::getDisplayColor() const
 {
 	return m_displayColor;

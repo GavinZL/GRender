@@ -278,6 +278,7 @@ public:
 	 * display color
 	 */
 	virtual void setDisplayColor(const Color4& color);
+	virtual void setDisplayColor(const Color3& color);
 	virtual const Color4& getDisplayColor() const;
 	virtual void setCascadeColorEnabled(bool cascadeEnabled);
 	virtual bool getCascadeColorEnabled() const;
