@@ -75,10 +75,9 @@ public:
 	inline bool hasIndics(){ return m_indics.size() > 0; }
 
 
-	inline bool getIndexCount(){ return m_indics.size(); }
-	inline bool getVertexCount(){ return m_vertics.size(); }
+	inline int getIndexCount(){ return m_indics.size(); }
+	inline int getVertexCount(){ return m_vertics.size(); }
 	inline GLuint getPrimitive(){ return m_primitive; }
-
 
 protected:
 

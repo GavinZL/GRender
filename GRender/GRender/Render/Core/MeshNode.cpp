@@ -1,3 +1,4 @@
+#include "GL/glew.h"
 #include "MeshNode.h"
 
 #include "Renderer.h"
@@ -7,6 +8,8 @@
 #include "GLProgram.h"
 #include "GLProgramState.h"
 #include "GLProgramCache.h"
+
+#include "Texture2D.h"
 
 #include "../Comm/Utils.h"
 
@@ -52,10 +55,6 @@ bool MeshNode::initMesh(const std::vector<Vec3>& position,
 	const std::vector<Vec2>& texs,
 	const std::vector<unsigned int>& indics)
 {
-	if (position.size() == 0){
-		return false;
-	}
-
 	if (nullptr != m_mesh){
 		delete m_mesh;
 		m_mesh = nullptr;
@@ -63,7 +62,7 @@ bool MeshNode::initMesh(const std::vector<Vec3>& position,
 
 	m_mesh = Mesh::create(position, normals, colors, texs, indics);
 
-	// 
+	//// 
 	genGLProgramState(true);
 
 	return true;
@@ -78,7 +77,7 @@ void MeshNode::draw(Renderer* renderer, const Mat4& transform, unsigned int flag
 	if (!m_mesh->isVisible()){
 		return;
 	}
-
+	
 	Color4 c = getDisplayColor();
 
 	auto programSt = m_mesh->getGLProgramState();
@@ -94,8 +93,9 @@ void MeshNode::draw(Renderer* renderer, const Mat4& transform, unsigned int flag
 	meshCommand->setDisplayColor(c);
 	meshCommand->setTransparent(isTransparent);
 
-	renderer->addCommand(meshCommand);
+	renderer->addCommand(meshCommand);	
 }
+
 
 void MeshNode::genGLProgramState(bool useLight)
 {
@@ -116,13 +116,5 @@ void MeshNode::genGLProgramState(bool useLight)
 		shader = GLProgram::SHADER_NAME_POSITION_NORMAL_COLOR;
 	}
 
-	if (shader){
-		glProgram = GLProgramCache::getInstance()->getGLProgram(shader);
-	}
-
-	auto programSt = GLProgramState::create(glProgram);
-
-	if (programSt){
-		m_mesh->setGLProgramState(programSt);
-	}
+	m_mesh->setGLProgramState(GLProgramState::getOrCreateWithGLProgramName(shader));
 }

@@ -10,6 +10,7 @@
 #include "../Comm/Macors.h"
 
 #include "Node.h"
+#include "CustomCommand.h"
 
 NAMESPACE_BEGIN
 
@@ -49,10 +50,6 @@ protected:
 
 	/** default one mesh*/
 	Mesh* m_mesh;
-
-
-
-
 };
 
 NAMESPACE_END

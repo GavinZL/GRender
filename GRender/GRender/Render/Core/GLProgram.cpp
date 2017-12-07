@@ -672,7 +672,10 @@ void GLProgram::setUniformsForBuiltins(const Mat4 &modelView)
 	}
 
 	if (m_flags.useNormal){
-		Mat4 normalMatrix = modelView.block(0,0,3,3);
+
+		Mat4 normalMatrix = modelView;
+		normalMatrix.col(3) = Vec4(0, 0, 0, 1);
+
 		setUniformLocationWithMatrix4fv(m_uniformsLocation[UNIFORM_NORMAL_MATRIX], (GLfloat*)normalMatrix.data(), 1);
 	}
 }

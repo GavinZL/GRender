@@ -140,12 +140,17 @@ void MeshCommand::execute()
 	}
 
 	// 1.
-	applyRenderState();
+	//applyRenderState();
 
 	auto glProgram = m_mesh->getGLProgramState()->getGLProgram();
 	glProgram->use();
 
-	glProgram->setUniformsForBuiltins();
+	glProgram->setUniformsForBuiltins(m_mv);
+
+	glProgram->setUniformLocationWith4f(glProgram->getUniformLocation(GLProgram::UNIFORM_NAME_DISPLAYCOLOR), 1.0f, 1.0f, 1.0f, 1.0f);
+	glProgram->setUniformLocationWith4f(glProgram->getUniformLocation(GLProgram::UNIFORM_NAME_LIGHTCOLOR), 1.0f, 1.0f, 1.0f, 1.0f);
+	glProgram->setUniformLocationWith4f(glProgram->getUniformLocation(GLProgram::UNIFORM_NAME_AMBIENT_COLOR), 1.0f, 1.0f, 1.0f, 1.0f);
+	glProgram->setUniformLocationWith3f(glProgram->getUniformLocation(GLProgram::UNIFORM_NAME_LIGHTPOSITION), 10.0f, 10.0f, 10.0f);
 
 	glEnableVertexAttribArray(GLProgram::VERTEX_ATTRIBUTE_POSITION);
 	glBindBuffer(GL_ARRAY_BUFFER, m_mesh->getVertexBuffer());
@@ -163,14 +168,14 @@ void MeshCommand::execute()
 		glVertexAttribPointer(GLProgram::VERTEX_ATTRIBUTE_NORMAL, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
 	}
 
-	//if (m_mesh->hasTexture()){
-	//	glActiveTexture(GL_TEXTURE0);
-	//	glBindBuffer(GL_TEXTURE_2D, m_mesh->getTexture2D()->getName());
+	if (m_mesh->hasTexture()){
+		glActiveTexture(GL_TEXTURE0);
+		glBindBuffer(GL_TEXTURE_2D, m_mesh->getTexture2D()->getName());
 
-	//	glEnableVertexAttribArray(GLProgram::VERTEX_ATTRIBUTE_TEXTURE0);
-	//	glBindBuffer(GL_ARRAY_BUFFER, m_mesh->getTextureBuffer());
-	//	glVertexAttribPointer(GLProgram::VERTEX_ATTRIBUTE_TEXTURE0, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
-	//}
+		glEnableVertexAttribArray(GLProgram::VERTEX_ATTRIBUTE_TEXTURE0);
+		glBindBuffer(GL_ARRAY_BUFFER, m_mesh->getTextureBuffer());
+		glVertexAttribPointer(GLProgram::VERTEX_ATTRIBUTE_TEXTURE0, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
+	}
 
 	if (m_mesh->hasIndics()){
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_mesh->getIndexBuffer());
@@ -194,7 +199,7 @@ void MeshCommand::execute()
 		glDisableVertexAttribArray(GLProgram::VERTEX_ATTRIBUTE_TEXTURE0);
 	}
 
-	restoreRenderState();
+	//restoreRenderState();
 }
 
 /**apply render states*/
