@@ -30,7 +30,8 @@ const char* GLProgram::SHADER_NAME_POSITION = "shader_position";
 const char* GLProgram::SHADER_NAME_POSITION_COLOR = "shader_position_color";
 const char* GLProgram::SHADER_NAME_POSITION_TEXTURE_COLOR = "shader_position_texture_color";
 const char* GLProgram::SHADER_NAME_POSITION_NORMAL_COLOR = "shader_position_normal_color";
-const char* GLProgram::SHADER_NAME_POSITION_NORMAL_TEXTURE_COLOR = "shader_position_normal_texture_color";
+const char* GLProgram::SHADER_NAME_POSITION_NORMAL_TEXTURE = "shader_position_normal_texture";
+const char* GLProgram::SHADER_NAME_POSITION_NORMAL_TEXTURE_COLOR = "shader_position_normal_color_texture";
 
 // attribute names
 const char* GLProgram::ATTRIBUTE_NAME_POSITION = "G_position";
@@ -59,6 +60,7 @@ const char* GLProgram::UNIFORM_NAME_SAMPLER3 = "G_texture3";
 const char* GLProgram::UNIFORM_NAME_DISPLAYCOLOR = "G_displayColor";
 const char* GLProgram::UNIFORM_NAME_LIGHTPOSITION = "G_lightPosition";
 const char* GLProgram::UNIFORM_NAME_LIGHTCOLOR = "G_lightColor";
+
 
 
 GLProgram::GLProgram()
@@ -673,10 +675,8 @@ void GLProgram::setUniformsForBuiltins(const Mat4 &modelView)
 
 	if (m_flags.useNormal){
 
-		Mat4 normalMatrix = modelView;
-		normalMatrix.col(3) = Vec4(0, 0, 0, 1);
-
-		setUniformLocationWithMatrix4fv(m_uniformsLocation[UNIFORM_NORMAL_MATRIX], (GLfloat*)normalMatrix.data(), 1);
+		Mat3 normalMatrix = modelView.block(0,0,3,3);
+		setUniformLocationWithMatrix3fv(m_uniformsLocation[UNIFORM_NORMAL_MATRIX], (GLfloat*)normalMatrix.data(), 1);
 	}
 }
 

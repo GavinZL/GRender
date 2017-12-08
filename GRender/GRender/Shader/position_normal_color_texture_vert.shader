@@ -1,9 +1,9 @@
 #version 430
 
-layout(location = 0) in vec3 G_position;
-layout(location = 1) in vec3 G_normal;
-layout(location = 2) in vec4 G_color;
-layout(location = 3) in vec2 G_texture0Coord;
+in vec3 G_position;
+in vec3 G_normal;
+in vec4 G_color;
+in vec2 G_texture0Coord;
 
 // 点光源位置
 uniform vec3 G_pointLightSourcePosition[8];
@@ -26,6 +26,9 @@ uniform mat4 G_mvMatrix;
 // normal matrix
 uniform mat3 G_normalMatrix;
 
+// out vertex
+out vec3 inter_vertex;
+
 // out normal
 out vec3 inter_Normal;
 
@@ -35,7 +38,7 @@ out vec2 inter_texCoord;
 // out color
 out vec4 inter_Color;
 
-int main(void)
+void main(void)
 {
 	// 转换到眼睛坐标
 	vec4 ePosition = G_mvMatrix * vec4(G_position,1.0);
@@ -47,6 +50,8 @@ int main(void)
 	}
 
 	inter_Normal = G_normalMatrix * G_normal;
+	inter_vertex = ePosition.xyz;
+
 	inter_texCoord = G_texture0Coord;
 	inter_texCoord.y = 1.0 - inter_texCoord.y;
 

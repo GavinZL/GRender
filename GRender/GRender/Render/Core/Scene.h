@@ -16,6 +16,7 @@ NAMESPACE_BEGIN
 class Camera;
 class Light;
 class Renderer;
+class DirectionLight;
 
 class Scene : public Node
 {
@@ -60,6 +61,8 @@ protected:
 	Camera* m_defaultCamera;
 	std::vector<Camera*> m_cameras;
 
+	// ##场景默认平行光
+	DirectionLight* m_defaultDirLight;
 	std::vector<Light*> m_lights;
 
 	float m_pitch;

@@ -73,6 +73,7 @@ public:
 	static const char* SHADER_NAME_POSITION_COLOR;
 	static const char* SHADER_NAME_POSITION_TEXTURE_COLOR;
 	static const char* SHADER_NAME_POSITION_NORMAL_COLOR;
+	static const char* SHADER_NAME_POSITION_NORMAL_TEXTURE;
 	static const char* SHADER_NAME_POSITION_NORMAL_TEXTURE_COLOR;
 
 	// attribute names

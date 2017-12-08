@@ -1,8 +1,8 @@
 #include "Light.h"
 #include "Scene.h"
+#include "Camera.h"
 
 USING_NAMESPACE_G;
-
 
 Light::Light()
 	: m_intensity(1.0)
@@ -47,6 +47,7 @@ void Light::onExit()
 // [12/7/2017 Administrator]
 
 DirectionLight::DirectionLight()
+	:Light()
 {
 
 }
@@ -67,11 +68,22 @@ DirectionLight* DirectionLight::create(const Vec3& direction, const Color3& colo
 
 void DirectionLight::setDirection(const Vec3& dir)
 {
-	setDirection(dir);
+	setRotation(dir);
 }
 
 Vec3 DirectionLight::getDirection()
 {
+	//// 此处默认为跟随相机的位置看向目标物的方向
+	//if (Camera::g_visitingCamera){
+
+	//	Vec3 dir = Camera::g_visitingCamera->getCameraToCenter();
+	//	dir.normalize();
+
+	//	return dir;
+	//}
+
+	//return Vec3::Zero();
+
 	Mat4 m = getNodeToParentTransform();
 	Mat3 m3 = m.block(0, 0, 3, 3);
 	Angle_Axis ax(m3);
@@ -81,6 +93,17 @@ Vec3 DirectionLight::getDirection()
 
 Vec3 DirectionLight::getDirectionInWorld()
 {
+	//// 此处默认为跟随相机的位置看向目标物的方向
+	//if (Camera::g_visitingCamera){
+
+	//	Vec3 dir = Camera::g_visitingCamera->getCameraToCenter();
+	//	dir.normalize();
+
+	//	return dir;
+	//}
+
+	//return Vec3::Zero();
+
 	Mat4 m = getNodeToWorldTransform();
 	Mat3 m3 = m.block(0, 0, 3, 3);
 	Angle_Axis ax(m3);
@@ -91,6 +114,7 @@ Vec3 DirectionLight::getDirectionInWorld()
 //  [12/7/2017 Administrator]
 
 PointLight::PointLight()
+	:Light()
 {
 
 }
@@ -114,6 +138,7 @@ PointLight* PointLight::create(const Vec3& position, const Color3& color, float 
 //  [12/7/2017 Administrator]
 
 SpotLight::SpotLight()
+	:Light()
 {
 
 }
@@ -174,6 +199,7 @@ void SpotLight::setOuterAngle(float angle)
 //  [12/7/2017 Administrator]
 
 AmbientLight::AmbientLight()
+	:Light()
 {
 
 }

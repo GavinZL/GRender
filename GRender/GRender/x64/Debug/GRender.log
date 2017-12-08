@@ -1,8 +1,2 @@
-﻿  GLWindow.cpp
-  GRender.cpp
-  moc_GLWindow.cpp
-  Light.cpp
-  Scene.cpp
-  Generating Code...
-e:\svn\espace\grender\grender\render\core\light.cpp(71): warning C4717: 'G::DirectionLight::setDirection' : recursive on all control paths, function will cause runtime stack overflow
+﻿  Scene.cpp
   GRender.vcxproj -> E:\SVN\ESpace\GRender\x64\Debug\GRender.exe

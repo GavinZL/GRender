@@ -29,6 +29,7 @@ enum ShaderType
 	Shader_Name_Position_Color,
 	Shader_Name_Position_Texture_Color,
 	Shader_Name_Position_Normal_Color,
+	Shader_Name_Position_Normal_Texture,
 	Shader_Name_Position_Normal_Texture_Color
 };
 

@@ -68,6 +68,8 @@ protected:
 };
 
 //  [12/7/2017 Administrator]
+// 此处的平行光就没有位置的概念，
+// 只有方向的概念(方向同时同相机相联系)
 class DirectionLight : public Light
 {
 public:

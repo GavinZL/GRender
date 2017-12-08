@@ -6,26 +6,23 @@
 
 USING_NAMESPACE_G
 
-//Shader_Name_Position,
-//Shader_Name_Position_Color,
-//Shader_Name_Position_Texture_Color,
-//Shader_Name_Position_Normal_Color,
-//Shader_Name_Position_Normal_Texture_Color
-
 const char* shader_Position_vert = "shader/position_vert.shader";
 const char* shader_Position_frag = "shader/position_frag.shader";
 
 const char* shader_Position_Color_vert = "shader/position_color_vert.shader";
 const char* shader_Position_Color_frag = "shader/position_color_frag.shader";
-
-const char* shader_Position_Texture_Color_vert = "";
-const char* shader_Position_Texture_Color_frag = "";
+// temp
+const char* shader_Position_Texture_Color_vert = "shader/position_color_vert.shader";
+const char* shader_Position_Texture_Color_frag = "shader/position_color_frag.shader";
 
 const char* shader_Position_Normal_Color_vert = "shader/position_normal_color_vert.shader";
 const char* shader_Position_Normal_Color_frag = "shader/position_normal_color_frag.shader";
 
-const char* shader_Position_Normal_Texture_Color_vert = "shader/position_normal_texture_vert.shader";
-const char* shader_Position_Normal_Texture_Color_frag = "shader/position_normal_texture_frag.shader";
+const char* shader_Position_Normal_Texture_vert = "shader/position_normal_texture_vert.shader";
+const char* shader_Position_Normal_Texture_frag = "shader/position_normal_texture_frag.shader";
+
+const char* shader_Position_Normal_Texture_Color_vert = "shader/position_normal_color_texture_vert.shader";
+const char* shader_Position_Normal_Texture_Color_frag = "shader/position_normal_color_texture_frag.shader";
 
 
 GLProgramCache *GLProgramCache::m_instanceCache = nullptr;
@@ -73,6 +70,10 @@ void GLProgramCache::loadDefaultGLPrograms()
 	p = new (std::nothrow) GLProgram;
 	this->loadDefaultGLProgram(p, Shader_Name_Position_Texture_Color);
 	m_programs.insert(std::make_pair(GLProgram::SHADER_NAME_POSITION_TEXTURE_COLOR, p));
+
+	p = new (std::nothrow) GLProgram;
+	this->loadDefaultGLProgram(p, Shader_Name_Position_Normal_Texture);
+	m_programs.insert(std::make_pair(GLProgram::SHADER_NAME_POSITION_NORMAL_TEXTURE, p));
 
 	p = new (std::nothrow) GLProgram;
 	this->loadDefaultGLProgram(p, Shader_Name_Position_Normal_Texture_Color);
@@ -161,6 +162,10 @@ void GLProgramCache::loadDefaultGLProgram(GLProgram* program, int type)
 		bret = program->initProgramWithFile(shader_Position_Texture_Color_vert, shader_Position_Texture_Color_frag);
 	}
 	break;
+	case Shader_Name_Position_Normal_Texture:
+	{
+		bret = program->initProgramWithFile(shader_Position_Normal_Texture_vert, shader_Position_Normal_Texture_frag);
+	}
 	default:
 		break;
 	}

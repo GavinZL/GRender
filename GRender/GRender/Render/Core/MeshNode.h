@@ -43,10 +43,18 @@ public:
 	/**—°‘Òshader¿‡–Õ*/
 	void genGLProgramState(bool useLight);
 
+	/** light mask getter & setter, light works only when _lightmask & light's flag is true, 
+	* default value of _lightmask is 0xffff 
+	*/
+	void setLightMask(unsigned int mask) { m_lightMask = mask; }
+	unsigned int getLightMask() const { return m_lightMask; }
 
 protected:
 	/**update aabb box */
 	bool m_aabbDirty;
+
+	unsigned int                 m_lightMask;
+	bool                         m_shaderUsingLight; // is current shader using light ?
 
 	/** default one mesh*/
 	Mesh* m_mesh;

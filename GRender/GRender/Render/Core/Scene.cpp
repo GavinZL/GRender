@@ -24,11 +24,25 @@ Scene* Scene::create()
 Scene::Scene()
 	: m_pitch(0.0f)
 	, m_yaw(0.0f)
+	, m_defaultDirLight(nullptr)
 {
+	// default camera
 	m_defaultCamera = Camera::create();
-	//m_defaultCamera->setPosition(Vec3(100, 0, 150));
-	//m_defaultCamera->setRotation(Vec3(0, 1.57f, 0));
 	this->addChild(m_defaultCamera);
+
+	// default ambient light
+	AmbientLight* ambLight = AmbientLight::create(Color3(0.2, 0.2, 0.2));
+	this->addChild(ambLight);
+
+	// default directional light
+	m_defaultDirLight = DirectionLight::create(Vec3(0, 1, 0), Color3(0.5, 0.5, 0.5));
+	this->addChild(m_defaultDirLight);
+
+	PointLight* pointLight = PointLight::create(Vec3(10,10, 0), Color3(0, 0, 1), 0.3);
+	this->addChild(pointLight);
+
+	// ##初始化刷新direction light的方向
+	updateCamera(0);
 }
 
 Scene::~Scene()
@@ -80,7 +94,6 @@ void Scene::render(Renderer* renderer)
 	//...
 	auto engine = Engine::getInstance();
 
-
 	Camera* defaultCamera = nullptr;
 	const auto& transform = this->getNodeToParentTransform();
 
@@ -126,12 +139,14 @@ void Scene::render(Renderer* renderer)
 
 void Scene::updateCamera(float deta)
 {
-	//if (m_pitch > EPSILON && m_yaw > EPSILON){
+	m_defaultCamera->setPose(m_pitch, m_yaw);
+	m_pitch = 0;
+	m_yaw = 0;
 
-		m_defaultCamera->setPose(m_pitch, m_yaw);
-		m_pitch = 0;
-		m_yaw = 0;
-	//}
+	// ##实时更新默认平行光的位置
+	Vec3 dir = m_defaultCamera->getCameraToCenter();
+	dir.normalize();
+	m_defaultDirLight->setDirection(dir);
 }
 
 void Scene::setCameraTrans(const Vec3& v)

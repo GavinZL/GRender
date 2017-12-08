@@ -21,15 +21,6 @@ public:
 	MeshCommand();
 	~MeshCommand();
 
-	/**Initialize with texture */
-	void init(GLuint textureId, GLProgramState* glProgramState, BlendFunc blendType,
-		GLuint vertexBuffer, GLuint indexBuffer, GLenum primitive, GLenum indexType,
-		long long indexCount, const Mat4& mv);
-
-	/**Initialize with color*/
-	void init(GLProgramState* glProgramState, GLuint vertexBuffer, GLuint vertexColor,
-		GLuint indexBuffer, GLenum primitive, GLenum indexType, long long indexCount, const Mat4& mv);
-
 	/**Initialize with mesh*/
 	void init(Mesh* mesh, const Mat4& mv);
 
@@ -61,35 +52,14 @@ protected:
 	void resetLightUniforms();
 
 protected:
+	/**mesh */
+	Mesh* m_mesh;
+
 	/**is texture  or color render */
 	bool m_isTextureRenderer;
 
-	/** texture id*/
-	GLuint m_textureId;
-
-	/** glProgramState */
-	GLProgramState* m_glProgramState;
-
-	/**vertex position buffer id*/
-	GLuint m_vertexBuffer;
-
-	/**vertex color buffer id*/
-	GLuint m_colorBuffer;
-
-	/**normal buffer id*/
-	GLuint m_normalBuffer;
-	
-	/**vertex index buffer id*/
-	GLuint m_indexBuffer;
-
 	/**draw type*/
 	GLenum m_primitive;
-
-	/** GL_BYTE or GL_FLOAT ...*/
-	GLenum m_indexFormat;
-
-	/** index count */
-	long long m_indexCount;
 
 	/**draw attributes*/
 	bool m_callFaceEnabled;
@@ -103,8 +73,7 @@ protected:
 	/**light mask*/
 	unsigned int m_lightMask;
 
-	/**mesh */
-	Mesh* m_mesh;
+
 };
 
 NAMESPACE_END

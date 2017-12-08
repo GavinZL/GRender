@@ -11,12 +11,18 @@
 
 #include "Texture2D.h"
 
+#include "Engine.h"
+#include "Scene.h"
+#include "Light.h"
+
 #include "../Comm/Utils.h"
 
 USING_NAMESPACE_G;
 
 MeshNode::MeshNode()
 	: m_mesh(nullptr)
+	, m_lightMask(-1)
+	, m_shaderUsingLight(false)
 {
 
 }
@@ -80,16 +86,27 @@ void MeshNode::draw(Renderer* renderer, const Mat4& transform, unsigned int flag
 	
 	Color4 c = getDisplayColor();
 
+	const auto& lights = Engine::getInstance()->getRunningScene()->getLigths();
+	bool usingLigth = false;
+	for (const auto& light : lights){
+		usingLigth = ((unsigned int)light->getLightFlag() & m_lightMask) > 0;
+		if (usingLigth){
+			break;
+		}
+	}
+
+	// shader
+	if (usingLigth != m_shaderUsingLight){
+		genGLProgramState(usingLigth);
+	}
+
 	auto programSt = m_mesh->getGLProgramState();
 	auto meshCommand = m_mesh->getMeshCommand();
 
-	// todo texture..
-
-	//
 	bool isTransparent = false;//(m_mesh->isTransparent() || c[3] < 1.0f);
 
 	meshCommand->init(m_mesh, transform);
-	meshCommand->setLightMask(0);
+	meshCommand->setLightMask(m_lightMask);
 	meshCommand->setDisplayColor(c);
 	meshCommand->setTransparent(isTransparent);
 
@@ -104,17 +121,19 @@ void MeshNode::genGLProgramState(bool useLight)
 		return;
 	}
 
+	m_shaderUsingLight = useLight;
+
 	GLProgram *glProgram = nullptr;
 	const char* shader = nullptr;
 
 	// 目前默认 有 顶点，法线，颜色
-	if (m_mesh->hasTexture()){
+	//if (m_mesh->hasTexture()){
 		shader = GLProgram::SHADER_NAME_POSITION_NORMAL_TEXTURE_COLOR;
-	}
-	else
-	{
-		shader = GLProgram::SHADER_NAME_POSITION_NORMAL_COLOR;
-	}
+	//}
+	//else
+	//{
+	//	shader = GLProgram::SHADER_NAME_POSITION_NORMAL_COLOR;
+	//}
 
 	m_mesh->setGLProgramState(GLProgramState::getOrCreateWithGLProgramName(shader));
 }
