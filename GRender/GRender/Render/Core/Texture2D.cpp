@@ -546,7 +546,7 @@ bool Texture2D::hasPremultipliedAlpha() const
 bool Texture2D::initWithData(const void *data, ssize_t dataLen, Texture2D::PixelFormat pixelFormat, int pixelsWide, int pixelsHigh/*, const Size& contentSize*/)
 {
     //CCASSERT(dataLen>0 && pixelsWide>0 && pixelsHigh>0, "Invalid size");
-	if (dataLen > 0 && pixelsWide > 0 && pixelsHigh > 0){
+	if (dataLen < 0 || pixelsWide < 0 || pixelsHigh < 0){
 		G::log("Invalid size");
 		return false;
 	}
@@ -564,14 +564,12 @@ bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat
     //CCASSERT(pixelFormat != PixelFormat::NONE && pixelFormat != PixelFormat::AUTO, "the \"pixelFormat\" param must be a certain value!");
    // CCASSERT(pixelsWide>0 && pixelsHigh>0, "Invalid size");
 
-	return false;
-
-	if (pixelFormat != PixelFormat::NONE && pixelFormat != PixelFormat::AUTO){
+	if (pixelFormat == PixelFormat::NONE && pixelFormat == PixelFormat::AUTO){
 		G::log("the \"pixelFormat\" param must be a certain value!");
 		return false;
 	}
 
-	if (pixelsWide > 0 && pixelsHigh > 0){
+	if (pixelsWide < 0 && pixelsHigh < 0){
 		G::log("Invalid size");
 		return false;
 	}
@@ -634,7 +632,7 @@ bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat
     }
 
     glGenTextures(1, &_name);
-	glBindTexture(0, _name);
+	glBindTexture(GL_TEXTURE_2D, _name);
     //GL::bindTexture2D(_name);
 
     if (mipmapsNum == 1)
@@ -709,7 +707,7 @@ bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat
     _hasMipmaps = mipmapsNum > 1;
 
     // shader
-    setGLProgram(GLProgramCache::getInstance()->getGLProgram(GLProgram::SHADER_NAME_POSITION_TEXTURE_COLOR));
+	// setGLProgram(GLProgramCache::getInstance()->getGLProgram(GLProgram::SHADER_NAME_POSITION_NORMAL_TEXTURE_COLOR));
     return true;
 }
 
@@ -718,7 +716,7 @@ bool Texture2D::updateWithData(const void *data,int offsetX,int offsetY,int widt
     if (_name)
     {
         //GL::bindTexture2D(_name);
-		glBindTexture(0, _name);
+		glBindTexture(GL_TEXTURE_2D, _name);
         const PixelFormatInfo& info = _pixelFormatInfoTables.at(_pixelFormat);
         glTexSubImage2D(GL_TEXTURE_2D,0,offsetX,offsetY,width,height,info.format, info.type,data);
 
@@ -751,7 +749,7 @@ bool Texture2D::initWithImage(Image *image, PixelFormat format)
 
     //Configuration *conf = Configuration::getInstance();
 
-	int maxTextureSize = 2048;//conf->getMaxTextureSize();
+	int maxTextureSize = 6000;//conf->getMaxTextureSize();
     if (imageWidth > maxTextureSize || imageHeight > maxTextureSize) 
     {
         G::log("cocos2d: WARNING: Image (%u x %u) is bigger than the supported %u x %u", imageWidth, imageHeight, maxTextureSize, maxTextureSize);
@@ -1243,7 +1241,7 @@ void Texture2D::generateMipmap()
 {
     //CCASSERT(_pixelsWide == ccNextPOT(_pixelsWide) && _pixelsHigh == ccNextPOT(_pixelsHigh), "Mipmap texture only works in POT textures");
     //GL::bindTexture2D( _name );
-	glBindTexture(0, _name);
+	glBindTexture(GL_TEXTURE_2D, _name);
     glGenerateMipmap(GL_TEXTURE_2D);
     _hasMipmaps = true;
 #if CC_ENABLE_CACHE_TEXTURE_DATA
@@ -1263,7 +1261,7 @@ void Texture2D::setTexParameters(const TexParams &texParams)
     //    "GL_CLAMP_TO_EDGE should be used in NPOT dimensions");
 
     //GL::bindTexture2D( _name );
-	glBindTexture(0, _name);
+	glBindTexture(GL_TEXTURE_2D, _name);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, texParams.minFilter );
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, texParams.magFilter );
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, texParams.wrapS );

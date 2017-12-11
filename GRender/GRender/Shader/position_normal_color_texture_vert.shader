@@ -53,7 +53,7 @@ void main(void)
 	inter_vertex = ePosition.xyz;
 
 	inter_texCoord = G_texture0Coord;
-	inter_texCoord.y = 1.0 - inter_texCoord.y;
+	//inter_texCoord.y = 1.0 - inter_texCoord.y;
 
 	inter_Color = G_color;
 	gl_Position = G_mvpMatrix * vec4(G_position, 1.0);

@@ -37,10 +37,10 @@ const char* GLProgram::SHADER_NAME_POSITION_NORMAL_TEXTURE_COLOR = "shader_posit
 const char* GLProgram::ATTRIBUTE_NAME_POSITION = "G_position";
 const char* GLProgram::ATTRIBUTE_NAME_COLOR = "G_color";
 const char* GLProgram::ATTRIBUTE_NAME_NORMAL = "G_normal";
-const char* GLProgram::ATTRIBUTE_NAME_TEXTURE0 = "G_texCoord0";
-const char* GLProgram::ATTRIBUTE_NAME_TEXTURE1 = "G_texCoord1";
-const char* GLProgram::ATTRIBUTE_NAME_TEXTURE2 = "G_texCoord2";
-const char* GLProgram::ATTRIBUTE_NAME_TEXTURE3 = "G_texCoord3";
+const char* GLProgram::ATTRIBUTE_NAME_TEXTURE0 = "G_texture0Coord";
+const char* GLProgram::ATTRIBUTE_NAME_TEXTURE1 = "G_texture1Coord";
+const char* GLProgram::ATTRIBUTE_NAME_TEXTURE2 = "G_texture2Coord";
+const char* GLProgram::ATTRIBUTE_NAME_TEXTURE3 = "G_texture3Coord";
 
 // uniform names
 const char* GLProgram::UNIFORM_NAME_AMBIENT_COLOR = "G_ambientColor";

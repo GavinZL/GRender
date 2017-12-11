@@ -27,7 +27,8 @@ public:
 		const std::vector<Vec3>& normals,
 		const std::vector<Vec4>& colors,
 		const std::vector<Vec2>& texs,
-		const std::vector<unsigned int>& indics);
+		const std::vector<unsigned int>& indics,
+		const std::string& texturePath = "");
 
 	/**calculate aabb box*/
 	void calculateAABB(const std::vector<Vec3>& vertics);
@@ -67,7 +68,8 @@ public:
 		const std::vector<Vec3>& normals,
 		const std::vector<Vec4>& colors,
 		const std::vector<Vec2>& texs,
-		const std::vector<unsigned int>& indics);
+		const std::vector<unsigned int>& indics,
+		const std::string& texturePath);
 
 	inline bool hasNormal(){ return m_normals.size() > 0; }
 	inline bool hasTexture(){ return m_textures.size() > 0; }
@@ -121,6 +123,10 @@ protected:
 
 	// 
 	GLuint m_primitive;
+
+	public:
+	// test
+	GLuint m_textureID;
 };
 
 

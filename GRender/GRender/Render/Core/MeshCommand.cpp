@@ -128,6 +128,12 @@ void MeshCommand::execute()
 		setLightUniforms();
 	}
 
+	if (m_mesh->hasTexture()){
+		glProgram->setUniformLocationWith1i(glProgram->getUniformLocation("G_texture0"), 0);
+		glActiveTexture(GL_TEXTURE0); 
+		glBindTexture(GL_TEXTURE_2D, m_mesh->getTexture2D()->getName());
+	}
+
 	glEnableVertexAttribArray(GLProgram::VERTEX_ATTRIBUTE_POSITION);
 	glBindBuffer(GL_ARRAY_BUFFER, m_mesh->getVertexBuffer());
 	glVertexAttribPointer(GLProgram::VERTEX_ATTRIBUTE_POSITION, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
@@ -144,14 +150,11 @@ void MeshCommand::execute()
 		glVertexAttribPointer(GLProgram::VERTEX_ATTRIBUTE_NORMAL, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
 	}
 
-	//if (m_mesh->hasTexture()){
-	//	glActiveTexture(GL_TEXTURE0);
-	//	glBindBuffer(GL_TEXTURE_2D, m_mesh->getTexture2D()->getName());
-
-	//	glEnableVertexAttribArray(GLProgram::VERTEX_ATTRIBUTE_TEXTURE0);
-	//	glBindBuffer(GL_ARRAY_BUFFER, m_mesh->getTextureBuffer());
-	//	glVertexAttribPointer(GLProgram::VERTEX_ATTRIBUTE_TEXTURE0, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
-	//}
+	if (m_mesh->hasTexture()){		
+		glEnableVertexAttribArray(GLProgram::VERTEX_ATTRIBUTE_TEXTURE0);
+		glBindBuffer(GL_ARRAY_BUFFER, m_mesh->getTextureBuffer());
+		glVertexAttribPointer(GLProgram::VERTEX_ATTRIBUTE_TEXTURE0, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
+	}
 
 	if (m_mesh->hasIndics()){
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_mesh->getIndexBuffer());

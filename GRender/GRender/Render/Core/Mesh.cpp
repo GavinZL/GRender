@@ -5,6 +5,8 @@
 #include "Texture2D.h"
 #include "../Comm/Utils.h"
 
+#include "Image.h"
+
 USING_NAMESPACE_G;
 
 Mesh::Mesh()
@@ -29,16 +31,40 @@ Mesh::~Mesh()
 
 }
 
-
+//#include <QImage>
 bool Mesh::init(const std::vector<Vec3>& position,
 	const std::vector<Vec3>& normals,
 	const std::vector<Vec4>& colors,
 	const std::vector<Vec2>& texs,
-	const std::vector<unsigned int>& indics)
+	const std::vector<unsigned int>& indics,
+	const std::string& texturePath)
 {
 	if (position.size() <= 0){
 		G::log("Error : Mesh::create() position.size() <= 0 \n");
 		return false;
+	}
+
+	if (!texturePath.empty()){
+		Image* img = new (std::nothrow)Image();
+		img->initWithImageFile(texturePath);
+
+		m_texture = new(std::nothrow) Texture2D();
+		m_texture->initWithImage(img);
+
+		//QImage image(texturePath.c_str());
+
+		//glGenTextures(1, &m_textureID);
+		//glBindTexture(GL_TEXTURE_2D, m_textureID);
+
+		//glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		//glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		////glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+		//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image.width(), image.height(), 0, GL_RGB, GL_UNSIGNED_BYTE, image.bits());
+		//glBindTexture(GL_TEXTURE_2D, 0);
+
 	}
 
 	m_vertics.resize(position.size());
@@ -82,6 +108,7 @@ bool Mesh::init(const std::vector<Vec3>& position,
 		glGenBuffers(1, &m_textureBuffer);
 		glBindBuffer(GL_ARRAY_BUFFER, m_textureBuffer);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(Vec2) * m_textures.size(), &m_textures[0], GL_STATIC_DRAW);
+
 	}
 
 	calculateAABB(m_vertics);
@@ -105,10 +132,11 @@ Mesh* Mesh::create(const std::vector<Vec3>& position,
 	const std::vector<Vec3>& normals,
 	const std::vector<Vec4>& colors,
 	const std::vector<Vec2>& texs,
-	const std::vector<unsigned int>& indics)
+	const std::vector<unsigned int>& indics,
+	const std::string& texturePath)
 {
 	auto mesh = new (std::nothrow) Mesh();
-	if (mesh && mesh->init(position, normals, colors, texs, indics)){
+	if (mesh && mesh->init(position, normals, colors, texs, indics,texturePath)){
 		return mesh;
 	}
 

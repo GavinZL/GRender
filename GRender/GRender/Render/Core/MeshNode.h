@@ -31,7 +31,8 @@ public:
 		const std::vector<Vec3>& normals,
 		const std::vector<Vec4>& colors,
 		const std::vector<Vec2>& texs,
-		const std::vector<unsigned int>& indics);
+		const std::vector<unsigned int>& indics,
+		const std::string& texturePath);
 
 	/**return mesh*/
 	inline Mesh* getMesh(){ return m_mesh; }

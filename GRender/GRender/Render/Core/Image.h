@@ -223,7 +223,7 @@ protected:
 
 
 	// ##add read rb file
-	unsigned int readDataFromFile(const std::string& file, unsigned char* dataPointer);
+	unsigned char* readDataFromFile(const std::string& file, unsigned int& len);
 
 };
 

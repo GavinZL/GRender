@@ -490,9 +490,10 @@ Image::~Image()
 }
 
 
-unsigned int Image::readDataFromFile(const std::string& file, unsigned char* dataPointer)
+unsigned char* Image::readDataFromFile(const std::string& file, unsigned int& len)
 {
 	unsigned char* buffer = nullptr;
+
 	size_t size = 0;
 	size_t readsize;
 
@@ -509,9 +510,9 @@ unsigned int Image::readDataFromFile(const std::string& file, unsigned char* dat
 	readsize = fread(buffer, sizeof(unsigned char), size, fp);
 	fclose(fp);
 
-	dataPointer = buffer;
+	len = readsize;
 
-	return size;
+	return buffer;
 }
 
 bool Image::initWithImageFile(const std::string& path)
@@ -541,9 +542,10 @@ bool Image::initWithImageFile(const std::string& path)
 #else
     //Data data = FileUtils::getInstance()->getDataFromFile(_filePath);
 	unsigned char* data = nullptr;
-	ssize_t dlen = readDataFromFile(_filePath, data);
+	unsigned int dlen = 0;
+	data = readDataFromFile(_filePath, dlen);
 
-    if (!data)
+    if (data != nullptr)
     {
         ret = initWithImageData(data, dlen);
     }

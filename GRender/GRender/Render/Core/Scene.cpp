@@ -38,8 +38,8 @@ Scene::Scene()
 	m_defaultDirLight = DirectionLight::create(Vec3(0, 1, 0), Color3(0.5, 0.5, 0.5));
 	this->addChild(m_defaultDirLight);
 
-	PointLight* pointLight = PointLight::create(Vec3(10,10, 0), Color3(0, 0, 1), 0.3);
-	this->addChild(pointLight);
+	//PointLight* pointLight = PointLight::create(Vec3(10,10, 0), Color3(0, 0, 1), 0.3);
+	//this->addChild(pointLight);
 
 	// ##初始化刷新direction light的方向
 	updateCamera(0);
@@ -83,10 +83,6 @@ const std::vector<Light*>& Scene::getLigths() const
 void Scene::setCameraScale(float sl)
 {
 	m_defaultCamera->setScale(sl);
-	//Vec3 eyeToCenter = m_defaultCamera->getCenter() - m_defaultCamera->getPosition();
-	//eyeToCenter *= sl;
-
-	//m_defaultCamera->setPosition(m_defaultCamera->getCenter() - eyeToCenter);
 }
 
 void Scene::render(Renderer* renderer)

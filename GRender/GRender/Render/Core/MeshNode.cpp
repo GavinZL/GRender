@@ -9,6 +9,7 @@
 #include "GLProgramState.h"
 #include "GLProgramCache.h"
 
+#include "Image.h"
 #include "Texture2D.h"
 
 #include "Engine.h"
@@ -52,21 +53,37 @@ bool MeshNode::initMesh(const std::string& modelPath)
 	IOManager::getInstance()->loadModelFromFile(modelPath,
 		vs, ns, cs, ts, is, texturePath);
 
-	return initMesh(vs, ns, cs, ts, is);
+	//Texture2D* tex = nullptr;
+	//if (!texturePath.empty()){
+	//	Image* img = new (std::nothrow)Image();
+	//	img->initWithImageFile(texturePath);
+	//	
+	//	tex = new(std::nothrow) Texture2D();
+	//	tex->initWithImage(img);
+	//}
+
+	bool b = initMesh(vs, ns, cs, ts, is,texturePath);
+
+	//if (m_mesh && tex){
+	//	m_mesh->setTexture2D(tex);
+	//}
+
+	return b;
 }
 
 bool MeshNode::initMesh(const std::vector<Vec3>& position,
 	const std::vector<Vec3>& normals,
 	const std::vector<Vec4>& colors,
 	const std::vector<Vec2>& texs,
-	const std::vector<unsigned int>& indics)
+	const std::vector<unsigned int>& indics,
+	const std::string& texturePath)
 {
 	if (nullptr != m_mesh){
 		delete m_mesh;
 		m_mesh = nullptr;
 	}
 
-	m_mesh = Mesh::create(position, normals, colors, texs, indics);
+	m_mesh = Mesh::create(position, normals, colors, texs, indics,texturePath);
 
 	//// 
 	genGLProgramState(true);

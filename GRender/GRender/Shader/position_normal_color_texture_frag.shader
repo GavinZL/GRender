@@ -38,6 +38,7 @@ uniform float G_spotLightSourceRangeInverse[8];
 //ambient
 uniform vec3 G_ambientLightSourceColor;
 
+// texture
 uniform sampler2D G_texture0;
 
 // is light
@@ -118,15 +119,17 @@ void main(void)
 
 			attenuation *= smoothstep(G_spotLightSourceOuterAngleCos[i], G_spotLightSourceInnerAngleCos[i], spotCurrAngleCos);
 			combinedColor.xyz += computeLighting(normal, inter_vertex ,vertexToSpotLightDirection, G_spotLightSourceColor[i], attenuation);
-		}
-		
-		
+		}		
 	}
 
+	fragColor = texture(G_texture0, inter_texCoord);
+	
+	/*
 	if (G_hasTexture == 1){
 		fragColor = texture2D(G_texture0, inter_texCoord) * inter_Color * combinedColor;
 	}
 	else{
 		fragColor =  inter_Color * combinedColor;
 	}
+	*/
 }
