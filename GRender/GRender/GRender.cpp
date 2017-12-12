@@ -10,6 +10,7 @@
 GRender::GRender(QWidget *parent)
 	: QMainWindow(parent)
 	, m_glWindow(nullptr)
+	, m_picker(nullptr)
 {
 	ui.setupUi(this);
 
@@ -34,11 +35,14 @@ GRender::GRender(QWidget *parent)
 
 		scene->addChild(drawNode);
 
-
 		G::DrawNode *drawBox = new (std::nothrow) G::DrawNode();
 		drawBox->init(G::DrawNode::CUBE, nullptr);
 		drawBox->drawCube(G::Vec3(-1, -1, -1), G::Vec3(1, 1, 1));
 		scene->addChild(drawBox);
+
+		// picker
+		m_picker = G::Picker::create(this->width(), this->height());
+		scene->addChild(m_picker);
 
 		m_glWindow->getEngine()->runWithScene(scene);
 	});

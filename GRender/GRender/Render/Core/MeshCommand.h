@@ -22,7 +22,7 @@ public:
 	~MeshCommand();
 
 	/**Initialize with mesh*/
-	void init(Mesh* mesh, const Mat4& mv);
+	void init(Mesh* mesh, const Mat4& mv, unsigned int priority = 0);
 
 
 	/**GL states*/

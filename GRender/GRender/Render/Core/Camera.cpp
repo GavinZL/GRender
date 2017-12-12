@@ -20,6 +20,8 @@ Camera::Camera()
 , m_center(Vec3::Zero())
 , m_up(Vec3(0,1,0))
 {
+	m_nodeFlagMask = _CAMERA;
+
 	m_view.setIdentity();
 	m_viewInv.setIdentity();
 	m_viewProjection.setIdentity();

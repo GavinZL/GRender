@@ -9,7 +9,7 @@ Light::Light()
 	, m_enabled(true)
 	, m_lightFlag(LIGHT0)
 {
-
+	m_nodeFlagMask = _LIGHT;
 }
 
 Light::~Light()

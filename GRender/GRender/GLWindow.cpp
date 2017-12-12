@@ -1,6 +1,7 @@
 #include "GL/glew.h"
 
 #include "GLWindow.h"
+#include "GRender.h"
 
 #include <QPainter>
 #include <QWheelEvent>
@@ -16,7 +17,11 @@ GLWindow::GLWindow(QWidget* parent/* = nullptr*/)
 	, m_cameraMoveSensitivity(1.f)
 	, m_dragging(false)
 	, m_midDragging(false)
+	, m_isAltPressed(false)
+	, m_parent(nullptr)
 {
+
+	m_parent = (GRender*)parent;
 
 	// ###日了鬼了的Qt设置， 放开这儿的注释 glew恩是弄死绘制不出东西来
 	// QSurface 's format
@@ -48,6 +53,8 @@ void GLWindow::initializeGL()
 
 	//glEnable(GL_POLYGON_SMOOTH_HINT);
 	//glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
+	//glShadeModel(GL_SMOOTH);
+	//glEnable(GL_LIGHTING);
 
 	// let us put the timer update init to here
 	m_updateTimer = new QTimer(this);
@@ -72,6 +79,9 @@ void GLWindow::resizeGL(int width, int height)
 	if (nullptr != m_engine){
 		m_engine->resize(width, height);
 	}
+	if (m_parent->getPicker()){
+		m_parent->getPicker()->resize(width, height);
+	}
 }
 
 void GLWindow::paintEvent(QPaintEvent *e)
@@ -94,14 +104,47 @@ void GLWindow::keyPressEvent(QKeyEvent *e)
 	case Qt::Key_Space:
 		m_engine->getRunningScene()->cameraReset();
 		break;
+	case Qt::Key_Alt:
+		m_isAltPressed = true;
+		break;
 	default:
 		break;
 	}
 }
 
-void GLWindow::keyReleaseEvent(QKeyEvent *)
+void GLWindow::keyReleaseEvent(QKeyEvent *e)
 {
+	switch (e->key())
+	{
+	case Qt::Key_Alt:
+		m_isAltPressed = false;
+		if (m_parent->getPicker()){
+			m_parent->getPicker()->setEnable(false);
 
+			// pick
+			m_parent->getPicker()->pickedRectangle(G::NodeFlag::_MESH);
+		}
+		break;
+
+	case Qt::Key_Delete:
+	{
+		if (m_parent->getPicker()){
+			// delete
+			m_parent->getPicker()->deleteVertics();
+		}
+	}
+	break;
+	case Qt::Key_R:
+	{
+		if (m_parent->getPicker()){
+			// restore
+			m_parent->getPicker()->restoreVertices();
+		}
+	}
+	break;
+	default:
+		break;
+	}
 }
 
 void GLWindow::mousePressEvent(QMouseEvent *e)
@@ -151,30 +194,39 @@ void GLWindow::mouseReleaseEvent(QMouseEvent *e)
 void GLWindow::mouseMoveEvent(QMouseEvent *e)
 {
 	e->accept();
-	if (m_dragging){
-		// ##rotation
-		m_dragEndPoint = e->pos();
-
-		float dx = static_cast<float>(m_cameraSensitivity)*
-			(static_cast<float>(m_dragEndPoint.x()) - static_cast<float>(m_dragStartPoint.x()));
-		float dy = static_cast<float>(-m_cameraSensitivity) *
-			(static_cast<float>(m_dragEndPoint.y()) - static_cast<float>(m_dragStartPoint.y()));
-
-		m_engine->getRunningScene()->setCameraPitch(-dx);
-		m_engine->getRunningScene()->setCameraYaw(dy);
-
-		m_dragStartPoint = m_dragEndPoint;
+	//@@ 是否为选择状态
+	if (m_isAltPressed && m_dragging){
+		if (m_parent->getPicker()){
+			m_parent->getPicker()->setRectangle(G::Vec2(m_dragStartPoint.x(), m_dragStartPoint.y()),
+				G::Vec2(e->pos().x(), e->pos().y()));
+		}
 	}
-	else if (m_midDragging){
-		// translate
-		m_dragEndPoint = e->pos();
-		float dx = static_cast<float>(-m_cameraMoveSensitivity)*
-			(static_cast<float>(m_dragEndPoint.x()) - static_cast<float>(m_dragStartPoint.x()));
-		float dy = static_cast<float>(m_cameraMoveSensitivity)*
-			(static_cast<float>(m_dragEndPoint.y()) - static_cast<float>(m_dragStartPoint.y()));
+	else{
+		if (m_dragging){
+			// ##rotation
+			m_dragEndPoint = e->pos();
 
-		m_engine->getRunningScene()->setCameraTrans(G::Vec3(-dx, dy, 0));
-		m_dragStartPoint = m_dragEndPoint;
+			float dx = static_cast<float>(m_cameraSensitivity)*
+				(static_cast<float>(m_dragEndPoint.x()) - static_cast<float>(m_dragStartPoint.x()));
+			float dy = static_cast<float>(-m_cameraSensitivity) *
+				(static_cast<float>(m_dragEndPoint.y()) - static_cast<float>(m_dragStartPoint.y()));
+
+			m_engine->getRunningScene()->setCameraPitch(-dx);
+			m_engine->getRunningScene()->setCameraYaw(dy);
+
+			m_dragStartPoint = m_dragEndPoint;
+		}
+		else if (m_midDragging){
+			// translate
+			m_dragEndPoint = e->pos();
+			float dx = static_cast<float>(-m_cameraMoveSensitivity)*
+				(static_cast<float>(m_dragEndPoint.x()) - static_cast<float>(m_dragStartPoint.x()));
+			float dy = static_cast<float>(m_cameraMoveSensitivity)*
+				(static_cast<float>(m_dragEndPoint.y()) - static_cast<float>(m_dragStartPoint.y()));
+
+			m_engine->getRunningScene()->setCameraTrans(G::Vec3(-dx, dy, 0));
+			m_dragStartPoint = m_dragEndPoint;
+		}
 	}
 }
 

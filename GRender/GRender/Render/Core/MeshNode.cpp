@@ -25,12 +25,13 @@ MeshNode::MeshNode()
 	, m_lightMask(-1)
 	, m_shaderUsingLight(false)
 {
-
+	m_nodeFlagMask = _MESH;
 }
 
 MeshNode::MeshNode(const std::string& filePath)
 	: m_mesh(nullptr)
 {
+	m_nodeFlagMask = _MESH;
 	initMesh(filePath);
 }
 
@@ -122,7 +123,7 @@ void MeshNode::draw(Renderer* renderer, const Mat4& transform, unsigned int flag
 
 	bool isTransparent = false;//(m_mesh->isTransparent() || c[3] < 1.0f);
 
-	meshCommand->init(m_mesh, transform);
+	meshCommand->init(m_mesh, transform, m_priority);
 	meshCommand->setLightMask(m_lightMask);
 	meshCommand->setDisplayColor(c);
 	meshCommand->setTransparent(isTransparent);

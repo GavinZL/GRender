@@ -68,7 +68,7 @@ void DrawNode::draw(Renderer* renderer, const Mat4& transform, unsigned int flag
 	if (m_initialized)
 	{
 		if (m_vertices.size() > 0){
-			m_customCommand.init();
+			m_customCommand.init(m_priority);
 			m_customCommand.func = G_CALLBACK_0(DrawNode::onDraw, this, transform, flags);
 			renderer->addCommand(&m_customCommand);
 		}

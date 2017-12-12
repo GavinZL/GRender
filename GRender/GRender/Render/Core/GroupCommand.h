@@ -40,7 +40,7 @@ public:
 	GroupCommand();
 	~GroupCommand();
 
-	void init();
+	void init(int priority);
 	inline int getRrenderQueueID() const { return m_renderQueueID; }
 
 protected:

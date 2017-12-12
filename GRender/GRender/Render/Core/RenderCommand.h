@@ -71,6 +71,9 @@ public:
 	/** set transparent flag */
 	inline void setTransparent(bool isTransparent) { m_isTransparent = isTransparent; }
 
+	/** get priority order*/
+	inline float getPriorityOrder() const { return m_priorityOrder; }
+
 protected:
 
 	RenderCommand();
@@ -84,6 +87,9 @@ protected:
 
 	/** Type used in order to avoid dynamic cast, faster*/
 	Type m_type;
+
+	/**priority*/
+	float m_priorityOrder;
 
 };
 

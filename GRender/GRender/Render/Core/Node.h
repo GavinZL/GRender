@@ -16,6 +16,19 @@
 
 NAMESPACE_BEGIN
 
+/**节点Flag*/
+enum NodeFlag
+{
+	_NODE = 1 << 0,
+	_SCENE = 1 << 1,
+	_CAMERA = 1 << 2,
+	_LIGHT = 1 << 3,
+	_GROUP = 1 << 4,
+	_MESH = 1 << 5,
+	_PICKER = 1 << 6,
+	_DEFAUT = _NODE
+};
+
 class GLProgram;
 class GLProgramState;
 class Renderer;
@@ -73,9 +86,9 @@ public:
 	* @param tag tag of A child
 	* @param name name of A child
 	*/
-	virtual void addChild(Node *child);
-	virtual void addChild(Node *child, int tag);
-	virtual void addChild(Node *child, const std::string &name);
+	virtual void addChild(Node *child, unsigned int priority = 0);
+	virtual void addChild(Node *child, int tag, unsigned int priority = 0);
+	virtual void addChild(Node *child, const std::string &name, unsigned int priority = 0);
 
 	/**
 	* Gets a child from the container with its tag
@@ -100,6 +113,11 @@ public:
 	* @return The amount of children.
 	*/
 	virtual int getChildrenCount() const;
+
+	/**
+	* return render priority
+	*/
+	virtual unsigned int getNodePriority() const { return m_priority; }
 
 	/**
 	* Sets(Gets) the parent node
@@ -199,6 +217,12 @@ public:
 	* Visits this node's children and draw them recursively.
 	*/
 	virtual void visit(Renderer* renderer, const Mat4& parentTransform, unsigned int parentFlags);
+
+
+	/**
+	* visit specail nodeflags 's  nodes , start from parent node
+	*/
+	virtual void visit(Node* parent, std::vector<Node*>& outs, unsigned int nodeFlags);
 
 	/*
 	* Update method will be called automatically every frame if "scheduleUpdate" is called, and the node is "live"
@@ -332,6 +356,9 @@ protected:
 	std::string m_name;
 	unsigned int m_hashName; 
 
+	// ##节点绘制优先级[主要用于绘制屏幕元素]
+	unsigned int m_priority;
+
 	// ##节点的位置
 	Vec3 m_position;			
 
@@ -378,6 +405,9 @@ protected:
 	/**
 	 * @}
 	 */
+protected:
+	/**节点类型*/
+	NodeFlag m_nodeFlagMask;
 };
 
 NAMESPACE_END

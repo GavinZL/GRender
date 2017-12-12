@@ -29,6 +29,8 @@ Node::Node()
 , m_inverseDirty(false)
 , m_aabb(nullptr)
 , m_userData(nullptr)
+, m_nodeFlagMask(_DEFAUT)
+, m_priority(0)
 {
 	m_transform.setIdentity();
 	m_modelViewTransform.setIdentity();
@@ -126,28 +128,30 @@ bool Node::isVisible() const
 	return m_visible;
 }
 
-void Node::addChild(Node *child)
+void Node::addChild(Node *child, unsigned int priority)
 {
 	if (nullptr == child)
 		return;
 
-	this->addChild(child, child->getName());
+	this->addChild(child, child->getName(), priority);
 }
 
-void Node::addChild(Node *child, int tag)
+void Node::addChild(Node *child, int tag, unsigned int priority)
 {
 	if (nullptr == child)
 		return;
 
 	this->addChildHelper(child, tag, "", true);
+	m_priority = priority;
 }
 
-void Node::addChild(Node *child, const std::string &name)
+void Node::addChild(Node *child, const std::string &name, unsigned int priority)
 {
 	if (nullptr == child)
 		return;
 
 	this->addChildHelper(child, 0, name, false);
+	m_priority = priority;
 }
 
 void Node::addChildHelper(Node* child, int tag, const std::string& name, bool setTag)
@@ -418,6 +422,24 @@ void Node::visit(Renderer* renderer, const Mat4& parentTransform, unsigned int p
 
 	//director->popMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
 }
+
+void Node::visit(Node* parent, std::vector<Node*>& outs, unsigned int nodeFlags)
+{
+	if (!m_visible){
+		return;
+	}
+
+	// ##需要查询的节点
+	if (nodeFlags == m_nodeFlagMask){
+		outs.push_back(this);
+	}
+
+	// ##iter children
+	for (auto &child : m_children){
+		child->visit(this, outs, nodeFlags);
+	}
+}
+
 
 unsigned int Node::processParentFlags(const Mat4& parentTransform, unsigned int parentFlags)
 {

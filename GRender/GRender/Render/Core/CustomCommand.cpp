@@ -15,9 +15,9 @@ CustomCommand::~CustomCommand()
 
 }
 
-void CustomCommand::init()
+void CustomCommand::init(int priority)
 {
-
+	m_priorityOrder = priority;
 }
 
 void CustomCommand::execute()

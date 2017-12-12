@@ -53,8 +53,9 @@ GroupCommand::GroupCommand()
 	m_renderQueueID = Engine::getInstance()->getRenderer()->getGroupCommandMgr()->getGroupID();
 }
 
-void GroupCommand::init()
+void GroupCommand::init(int priority)
 {
+	m_priorityOrder = priority;
 	auto manager = Engine::getInstance()->getRenderer()->getGroupCommandMgr();
 	manager->releaseGroupID(m_renderQueueID);
 	m_renderQueueID = manager->getGroupID();

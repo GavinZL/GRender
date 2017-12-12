@@ -5,8 +5,12 @@
 #include "ui_grender.h"
 #include <QDragEnterEvent>
 #include <QDropEvent>
+#include <QResizeEvent>
+
+#include "Render/Core/Picker.h"
 
 class GLWindow;
+
 
 class GRender : public QMainWindow
 {
@@ -20,11 +24,17 @@ public:
 	void dragEnterEvent(QDragEnterEvent *event);
 	void dropEvent(QDropEvent *event);
 
+	// get picker
+	inline G::Picker* getPicker(){ return m_picker; }
+
 private:
 	Ui::GRenderClass ui;
 
 	// main opengl window
 	GLWindow *m_glWindow;
+
+	//Ê°È¡½áµã
+	G::Picker* m_picker;
 };
 
 #endif // GRENDER_H

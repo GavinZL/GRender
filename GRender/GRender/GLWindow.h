@@ -13,6 +13,7 @@
 
 #include "Render/GEngine.h"
 
+class GRender;
 class GLWindow : public QOpenGLWidget
 {
 	Q_OBJECT
@@ -61,6 +62,10 @@ private:
 
 	bool m_dragging;
 	bool m_midDragging;
+
+	// alt pressed
+	bool m_isAltPressed;
+	GRender* m_parent;
 };
 
 

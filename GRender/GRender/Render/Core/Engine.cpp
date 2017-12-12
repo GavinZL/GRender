@@ -188,7 +188,7 @@ void Engine::drawScene()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glEnable(GL_DEPTH_TEST);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	//pushMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
 

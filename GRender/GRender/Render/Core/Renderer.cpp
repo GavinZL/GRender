@@ -9,6 +9,12 @@
 
 USING_NAMESPACE_G
 
+// ±È½Ï
+static bool compareRenderCommand(RenderCommand* a, RenderCommand* b)
+{
+	return a->getPriorityOrder() < b->getPriorityOrder();
+}
+
 void RenderQueue::pushBack(RenderCommand* command)
 {
 	m_queues.push_back(command);
@@ -17,6 +23,11 @@ void RenderQueue::pushBack(RenderCommand* command)
 unsigned int RenderQueue::size() const
 {
 	return m_queues.size();
+}
+
+void RenderQueue::sort()
+{
+	std::sort(std::begin(m_queues), std::end(m_queues), compareRenderCommand);
 }
 
 RenderCommand* RenderQueue::operator[](unsigned int index) const
@@ -147,6 +158,11 @@ void Renderer::render()
 	m_isRendering = true;
 
 	if (m_glViewAssigned){
+
+		// sort
+		for (auto &renderqueue : m_renderGroups){
+			renderqueue.sort();
+		}
 
 		// opacity
 		visitRenderQueue(m_renderGroups[0]);

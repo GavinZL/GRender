@@ -76,10 +76,37 @@ public:
 	inline bool hasColor(){ return m_colors.size() > 0; }
 	inline bool hasIndics(){ return m_indics.size() > 0; }
 
-
 	inline int getIndexCount(){ return m_indics.size(); }
 	inline int getVertexCount(){ return m_vertics.size(); }
 	inline GLuint getPrimitive(){ return m_primitive; }
+
+	inline std::vector<Vec3>& getVertics() { return m_vertics; }
+	inline std::vector<Vec3>& getNormals() { return m_normals; }
+	inline std::vector<Vec4>& getColors(){ return m_colors; }
+	inline std::vector<Vec2>& getTextures(){ return m_textures; }
+	inline std::vector<unsigned int>& getIndics(){ return m_indics; }
+
+	/** 对mesh进行编辑操作 [包括： 修改点颜色， 删点等]*/
+	// ##修改指定索引的颜色值
+	void changeColor(unsigned int index, const Vec4& color = Vec4(1.0, 0.0, 0.0, 0.0));
+	
+	// ##修改颜色完成， 统一刷新一次
+	void flashColor();
+
+	// ##反选颜色
+	void inverseColor();
+
+	// ##恢复原始颜色值
+	void resetColor();
+
+	// ##删除索引数组中的顶点[同时删除与顶点相关联的三角形缩影]
+	void deleteVertics();
+
+	// ##恢复删除的顶点
+	void resetVertics();
+
+	// ##刷新buffer
+	void flashBuffer();
 
 protected:
 
@@ -114,12 +141,41 @@ protected:
 	GLuint m_indexBuffer;
 	GLuint m_textureBuffer;
 
+	// 原始顶点数据
 	std::vector<Vec3> m_vertics;
-	std::vector<Vec4> m_colors;
-	std::vector<Vec3> m_normals;
-	std::vector<Vec2> m_textures;
-	std::vector<unsigned int> m_indics;
+	
+	// 可修改的定点数，备份数据
+	std::vector<Vec3> m_verticsBak;
 
+	// 原始的法线数据
+	std::vector<Vec3> m_normals;
+
+	// 可修改的数据， 备份数据
+	std::vector<Vec3> m_normalsBak;
+
+	// 原始纹理数据
+	std::vector<Vec2> m_textures;
+
+	// 可修改的数据， 备份数据
+	std::vector<Vec2> m_texturesBak;
+
+	// 原始三角索引数据
+	std::vector<unsigned int> m_indics;
+	
+	// 可修改的数据， 备份数据
+	std::vector<unsigned int> m_indicsBak;
+
+	// 本身颜色
+	std::vector<Vec4> m_colors;	
+
+	// 可修改的数据， 备份数据
+	std::vector<Vec4> m_colorsBak;
+
+	// 用于修改，显示的颜色
+	std::vector<Vec4> m_displayColors;
+
+	// 存储有修改的顶点索引
+	std::vector<unsigned int> m_modifyVerticsIndex;
 
 	// 
 	GLuint m_primitive;

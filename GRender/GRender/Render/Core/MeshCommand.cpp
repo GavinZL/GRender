@@ -64,8 +64,10 @@ MeshCommand::~MeshCommand()
 
 }
 
-void MeshCommand::init(Mesh* mesh, const Mat4& mv)
+void MeshCommand::init(Mesh* mesh, const Mat4& mv, unsigned int priority)
 {
+	m_priorityOrder = priority;
+
 	if (!mesh){
 		return;
 	}
@@ -243,7 +245,7 @@ void MeshCommand::setLightUniforms()
 		GLint enabledDirLightNum = 0;
 		GLint enabledPointLightNum = 0;
 		GLint enabledSpotLightNum = 0;
-		Vec3 ambientColor;
+		Vec3 ambientColor = Vec3::Zero();
 
 		for (const auto& light : lights){
 			bool useLight = light->isEnable() &&
@@ -303,6 +305,8 @@ void MeshCommand::setLightUniforms()
 						s_spotLightUniformInnerAngleCosValues[enabledSpotLightNum] = spotLight->getCosInnerAngle();
 						s_spotLightUniformOuterAngleCosValues[enabledSpotLightNum] = spotLight->getCosOuterAngle();
 						s_spotLightUniformRangeInverseValues[enabledSpotLightNum] = 1.0f / spotLight->getRange();
+
+						enabledSpotLightNum++;
 					}
 				}
 					break;

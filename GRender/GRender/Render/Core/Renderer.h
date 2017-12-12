@@ -28,7 +28,7 @@ class RenderQueue
 public:
 	void pushBack(RenderCommand* command);
 	unsigned int size() const;
-	
+	void sort();
 	RenderCommand* operator[](unsigned int idnex) const;
 	void clear();
 

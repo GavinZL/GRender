@@ -26,16 +26,19 @@ Scene::Scene()
 	, m_yaw(0.0f)
 	, m_defaultDirLight(nullptr)
 {
+	m_nodeFlagMask = _SCENE;
+
 	// default camera
 	m_defaultCamera = Camera::create();
 	this->addChild(m_defaultCamera);
 
 	// default ambient light
-	AmbientLight* ambLight = AmbientLight::create(Color3(0.2, 0.2, 0.2));
+	AmbientLight* ambLight = AmbientLight::create(Color3(1, 1, 1));
+	ambLight->setIntensity(0.3);
 	this->addChild(ambLight);
 
 	// default directional light
-	m_defaultDirLight = DirectionLight::create(Vec3(0, 1, 0), Color3(0.5, 0.5, 0.5));
+	m_defaultDirLight = DirectionLight::create(Vec3(0, 1, 0), Color3(0.6, 0.6, 0.6));
 	this->addChild(m_defaultDirLight);
 
 	//PointLight* pointLight = PointLight::create(Vec3(10,10, 0), Color3(0, 0, 1), 0.3);
