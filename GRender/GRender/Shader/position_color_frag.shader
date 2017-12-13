@@ -12,5 +12,5 @@ void main()
 	vec3 rColor = intermediateColor.rgb * G_displayColor.a;
 	vec3 aColor = G_displayColor.rgb * (1 - G_displayColor.a);
 
-	fragColor = intermediateColor; //vec4(rColor + aColor, 1.0);
+	fragColor = intermediateColor * G_displayColor;
 }

@@ -84,6 +84,12 @@ public:
 	void transform(const Mat4& mat);
 
 
+	/**
+	* Æ½ÒÆoffset
+	*/
+	void transformOffset(const Vec3& offset);
+
+
 public:
 	Vec3 _min;
 	Vec3 _max;

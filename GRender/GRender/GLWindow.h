@@ -14,6 +14,11 @@
 #include "Render/GEngine.h"
 
 class GRender;
+
+NAMESPACE_BEGIN
+class Node;
+NAMESPACE_END
+
 class GLWindow : public QOpenGLWidget
 {
 	Q_OBJECT
@@ -34,6 +39,9 @@ public:
 	virtual void mouseMoveEvent(QMouseEvent *e);
 	virtual void wheelEvent(QWheelEvent *e);
 	virtual void mouseDoubleClickEvent(QMouseEvent *e);
+
+private:
+	void rayPickNode(int x, int y);
 
 public:
 	/**
@@ -66,6 +74,11 @@ private:
 	// alt pressed
 	bool m_isAltPressed;
 	GRender* m_parent;
+
+	// ray picker
+	bool m_isCtrlPressed;
+	bool m_isSelectAssist;
+	G::Node* m_selectNode;	// …‰œﬂ—°÷–node
 };
 
 

@@ -68,6 +68,11 @@ public:
 	*/
 	virtual void lookAt(const Vec3& target, const Vec3& up);
 
+	/**
+	* 获取相机看向目标物的矩阵
+	*/
+	virtual Mat3 getLookAtMatrix(const Vec3& target, const Vec3& up=Vec3::Zero());
+
 
 	/**
 	* Gets the camera's projection matrix.
@@ -87,10 +92,12 @@ public:
 	 */
 	const Mat4& getViewProjectionMatrix();
 
-	/**
-	* Convert the specified point of viewport from screenspace coordinate into the worldspace coordinate.
+	/**鼠标点击，返回世界坐标*/
+	/** x, y : mouse point
+	*  width , heith : window w && h
+	* return: direction
 	*/
-	void unproject(const Vec2& viewport, Vec3* src, Vec3* dst) const;
+	Vec3 getMousePointToWorld(int x, int y, int width, int height);
 
 
 	// ##return current visiting camera

@@ -13,6 +13,7 @@
 #include "GLProgramState.h"
 #include "GLProgram.h"
 
+#include "Ray.h"
 #include <iostream>
 
 USING_NAMESPACE_G
@@ -92,6 +93,38 @@ const Vec3& Node::getPosition() const
 	return m_position;
 }
 
+void Node::setPositionLocal(const Vec3& local)
+{
+	Mat3 mrot = getScene()->getCameraLookAtMatrix(m_position);
+
+	Vec3 xaxis = Vec3(mrot.data()[0], mrot.data()[3], mrot.data()[6]);
+	Vec3 yaxis = Vec3(mrot.data()[1], mrot.data()[4], mrot.data()[7]);
+	Vec3 zaxis = Vec3(mrot.data()[2], mrot.data()[5], mrot.data()[8]);
+
+	Vec3 offset(Vec3::Zero());
+	if (local[0] != 0.f){
+		offset += xaxis * local[0];
+	}
+	if (local[1] != 0.f){
+		offset += yaxis * local[1];
+	}
+	if (local[2] != 0.f){
+		offset += zaxis * local[2];
+	}
+
+	m_position += offset;
+	m_transformUpdated = true;
+	m_transformDirty = true;
+
+	// ##更新aabb的位置
+	if (m_aabb != nullptr){
+		//m_aabb->transform(getNodeToWorldTransform());
+		m_aabb->transformOffset(offset);
+		updateBoundingBox();
+	}
+}
+
+
 void Node::setRotation(const Vec3& rotation)
 {
 	if (m_rotation == rotation){
@@ -106,6 +139,65 @@ void Node::setRotation(const Vec3& rotation)
 const Vec3& Node::getRotation() const
 {
 	return m_rotation;
+}
+
+void Node::setRotationLocal(const Vec3& rot)
+{
+	Scene* _scene = getScene();
+	if (_scene == nullptr)
+		return;
+	
+	float angle = m_rotation.norm();
+	Vec3 rot_axis = m_rotation.normalized();
+	Angle_Axis AA = Angle_Axis(angle, rot_axis);
+	//Mat3 mrot = AA.toRotationMatrix();
+	Vec3 realV = AA.axis();
+
+	Mat3 mrot = _scene->getCameraLookAtMatrix(m_position);
+	Vec3 xaxis = Vec3(mrot.data()[0], mrot.data()[3], mrot.data()[6]);
+	Vec3 yaxis = Vec3(mrot.data()[1], mrot.data()[4], mrot.data()[7]);
+	Vec3 zaxis = Vec3(mrot.data()[2], mrot.data()[5], mrot.data()[8]);
+
+	Angle_Axis x_axis(DEG_TO_RAD(rot[0]), xaxis);
+	realV = x_axis * realV;
+
+	Angle_Axis a_axis = Angle_Axis(DEG_TO_RAD(rot[1]), yaxis);
+	realV = a_axis * realV;
+
+	/*
+	G::Mat3 _view;
+	_view.setZero();
+
+	_view.data()[0] = xaxis(0);
+	_view.data()[1] = yaxis(0);
+	_view.data()[2] = zaxis(0);
+
+	_view.data()[3] = xaxis(1);
+	_view.data()[4] = yaxis(1);
+	_view.data()[5] = zaxis(1);
+
+	_view.data()[6] = xaxis(2);
+	_view.data()[7] = yaxis(2);
+	_view.data()[8] = zaxis(2);
+
+	Angle_Axis r_axis(_view);
+	Vec3 ax = r_axis.axis() * r_axis.angle();
+	*/
+
+	m_rotation = realV * AA.angle();
+	
+	//m_rotation[0] += DEG_TO_RAD(rot[0]);
+	//m_rotation[1] += DEG_TO_RAD(rot[1]);
+	//m_rotation[2] += DEG_TO_RAD(rot[2]);
+
+	m_transformUpdated = true;
+	m_transformDirty = true;
+
+	//// ##更新aabb的位置
+	//if (m_aabb != nullptr){
+	//	m_aabb->transform(getNodeToWorldTransform());
+	//	updateBoundingBox();
+	//}
 }
 
 /**
@@ -441,6 +533,33 @@ void Node::visit(Node* parent, std::vector<Node*>& outs, unsigned int nodeFlags)
 }
 
 
+void Node::visit(Node* parent, Ray* ray, std::vector<Node*>& outs, unsigned int nodeFlag, bool needOne)
+{
+	if (!m_visible){
+		return;
+	}
+
+	if (ray == nullptr){
+		return;
+	}
+
+	// ##需要查询的节点
+	if (nodeFlag == m_nodeFlagMask && this->m_aabb){
+		if (ray->intersects(*m_aabb)){
+			outs.push_back(this);
+			
+			if (needOne){
+				return;
+			}
+		}
+	}
+
+	// ##iter children
+	for (auto &child : m_children){
+		child->visit(this, ray, outs, nodeFlag);
+	}
+}
+
 unsigned int Node::processParentFlags(const Mat4& parentTransform, unsigned int parentFlags)
 {
 	if (m_transformUpdated){
@@ -503,44 +622,32 @@ const Mat4& Node::getNodeToParentTransform()
 		m_transform.setIdentity();
 		
 		float angle = m_rotation.norm();
-		m_rotation.normalize();
+		Vec3 axis = m_rotation.normalized();
 
-		//QQuaternion q(angle, QVector3D(m_rotation[0], m_rotation[1], m_rotation[2]));
-		//QMatrix4x4 trans;
-		//
-		//trans.scale(QVector3D(m_scale[0], m_scale[1], m_scale[2]));		
-		//trans.translate(QVector3D(m_position[0], m_position[1], m_position[2]));
-		//trans.rotate(q);
+		Angle_Axis AA = Angle_Axis(angle, axis);
+		Mat3 mrot = AA.toRotationMatrix();
 
-		//qDebug() << " ||| ";
-		//qDebug() << trans;
+		m_transform.data()[0] = mrot.data()[0] * m_scale[0];  
+		m_transform.data()[1] = mrot.data()[1] * m_scale[0];
+		m_transform.data()[2] = mrot.data()[2] * m_scale[0];
+		m_transform.data()[3] = 0.0;
 
-		//m_transform.data()[0] = trans.data()[0];  m_transform.data()[1] = trans.data()[1];
-		//m_transform.data()[2] = trans.data()[2];  m_transform.data()[3] = trans.data()[3];
-		//m_transform.data()[4] = trans.data()[4];  m_transform.data()[5] = trans.data()[5];
-		//m_transform.data()[6] = trans.data()[6];  m_transform.data()[7] = trans.data()[7];
-		//m_transform.data()[8] = trans.data()[8];  m_transform.data()[9] = trans.data()[9];
-		//m_transform.data()[10] = trans.data()[10]; m_transform.data()[11] = trans.data()[11];
-		//m_transform.data()[12] = trans.data()[12]; m_transform.data()[13] = trans.data()[13];
-		//m_transform.data()[14] = trans.data()[14]; m_transform.data()[15] = trans.data()[15];
+		m_transform.data()[4] = mrot.data()[3] * m_scale[1];
+		m_transform.data()[5] = mrot.data()[4] * m_scale[1];
+		m_transform.data()[6] = mrot.data()[5] * m_scale[1];
+		m_transform.data()[7] = 0.0;
 
-		Angle_Axis AA = Angle_Axis(angle, m_rotation);
-		Mat3 mrot = AA.toRotationMatrix();//matrixFromAxisAngle(angle, m_rotation);
-		//Mat3 mrot = rot.inverse();
+		m_transform.data()[8]  = mrot.data()[6] * m_scale[2];
+		m_transform.data()[9]  = mrot.data()[7] * m_scale[2];
+		m_transform.data()[10] = mrot.data()[8] * m_scale[2];
+		m_transform.data()[11] = 0.0;
+
+		m_transform.data()[12] = m_position[0]; 
+		m_transform.data()[13] = m_position[1]; 
+		m_transform.data()[14] = m_position[2]; 
+		m_transform.data()[15] = 1.0;
 
 		m_transformDirty = false;
-
-		double mat[] = {
-			mrot.data()[0] * m_scale[0], mrot.data()[1] * m_scale[0], mrot.data()[2] * m_scale[0], 0,
-			mrot.data()[3] * m_scale[1], mrot.data()[4] * m_scale[1], mrot.data()[5] * m_scale[1], 0,
-			mrot.data()[6] * m_scale[2], mrot.data()[7] * m_scale[2], mrot.data()[8] * m_scale[2], 0,
-			m_position[0], m_position[1], m_position[2], 1 };
-
-		m_transform.data()[0] = mat[0];  m_transform.data()[1] = mat[1];  m_transform.data()[2] = mat[2];  m_transform.data()[3] = mat[3];
-		m_transform.data()[4] = mat[4];  m_transform.data()[5] = mat[5];  m_transform.data()[6] = mat[6];  m_transform.data()[7] = mat[7];
-		m_transform.data()[8] = mat[8];  m_transform.data()[9] = mat[9];  m_transform.data()[10] = mat[10]; m_transform.data()[11] = mat[11];
-		m_transform.data()[12] = mat[12]; m_transform.data()[13] = mat[13]; m_transform.data()[14] = mat[14]; m_transform.data()[15] = mat[15];
-
 	}
 
 	return m_transform;

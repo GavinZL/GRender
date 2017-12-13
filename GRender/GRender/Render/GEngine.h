@@ -29,6 +29,14 @@
 #include "Core/Scene.h"
 #include "Core/RenderCommand.h"
 #include "Core/DrawNode.h"
+#include "Core/Ray.h"
+#include "Core/Picker.h"
+#include "Core/CustomCommand.h"
+#include "Core/GroupCommand.h"
+#include "Core/IOManager.h"
+#include "Core/AABB.h"
+#include "Core/Image.h"
+#include "Core/Texture2D.h"
 
 
 #endif

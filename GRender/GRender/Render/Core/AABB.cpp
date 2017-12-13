@@ -198,3 +198,37 @@ void AABB::transform(const Mat4& mat)
 
 	updateMinMax(corners, 8);
 }
+
+void AABB::transformOffset(const Vec3& offset)
+{
+	Vec3 corners[8];
+	// Near face, specified counter-clockwise
+	// Left-top-front.
+	corners[0] = Vec3(_min[0], _max[1], _max[2]);
+	// Left-bottom-front.
+	corners[1] = Vec3(_min[0], _min[1], _max[2]);
+	// Right-bottom-front.
+	corners[2] = Vec3(_max[0], _min[1], _max[2]);
+	// Right-top-front.
+	corners[3] = Vec3(_max[0], _max[1], _max[2]);
+
+	// Far face, specified clockwise
+	// Right-top-back.
+	corners[4] = Vec3(_max[0], _max[1], _min[2]);
+	// Right-bottom-back.
+	corners[5] = Vec3(_max[0], _min[1], _min[2]);
+	// Left-bottom-back.
+	corners[6] = Vec3(_min[0], _min[1], _min[2]);
+	// Left-top-back.
+	corners[7] = Vec3(_min[0], _max[1], _min[2]);
+
+	// Transform the corners, recalculate the min and max points along the way.
+	for (int i = 0; i < 8; i++){
+		//mat.transformPoint(&corners[i]);
+		corners[i] += offset;
+	}
+
+	reset();
+
+	updateMinMax(corners, 8);
+}

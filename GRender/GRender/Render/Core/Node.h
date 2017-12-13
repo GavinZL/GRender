@@ -34,6 +34,7 @@ class GLProgramState;
 class Renderer;
 class Scene;
 class AABB;
+class Ray;
 
 class Node : public Ref
 {
@@ -63,6 +64,8 @@ public:
 	virtual void setPosition(const Vec3& position);
 	virtual const Vec3& getPosition() const;
 
+	/*设置相对自身坐标系移动位移*/
+	virtual void setPositionLocal(const Vec3& local);
 
 	/**
 	* Sets the rotation (X,Y,Z) in degrees.
@@ -70,6 +73,9 @@ public:
 	*/
 	virtual void setRotation(const Vec3& rotation);
 	virtual const Vec3& getRotation() const;
+
+	/**设置相对自身坐标系的旋转*/
+	virtual void setRotationLocal(const Vec3& rot);
 
 	/**
 	* Sets whether the node is visible
@@ -224,6 +230,18 @@ public:
 	*/
 	virtual void visit(Node* parent, std::vector<Node*>& outs, unsigned int nodeFlags);
 
+
+	/**
+	* visit specail nodeflags's nodes and in
+	* params: 
+	*	parent : 遍历开始节点
+	*	ray	: 射线
+	*	outs: 返回节点
+	*	nodeFlag : node flag
+	*	needOne : 指定摄像相交第一个节点后 是否返回[true : 表示返回, false: 表示遍历所有的场景节点]
+	*/
+	virtual void visit(Node* parent, Ray* ray, std::vector<Node*>& outs, unsigned int nodeFlag, bool needOne = true);
+
 	/*
 	* Update method will be called automatically every frame if "scheduleUpdate" is called, and the node is "live"
 	*/
@@ -241,6 +259,20 @@ public:
 	* Returns an AABB (axis-aligned bounding-box) in its parent's coordinate system.
 	*/
 	virtual AABB* getBoundingBox() const;
+
+	/**
+	* 设置包围盒颜色值
+	*/
+	virtual void setBoundingBoxColor(const Color3& color){}
+
+	/**隐藏boungding box*/
+	virtual void hideBoundingBox(bool b){}
+
+	/**返回boundingbox 状态*/
+	virtual bool boundingBoxVisible(){ return false; }
+
+	/**更新bounding box*/
+	virtual void updateBoundingBox() {};
 
 	/**
 	 * @{
@@ -308,16 +340,13 @@ public:
 	virtual bool getCascadeColorEnabled() const;
 	virtual void updateDisplayColor(const Color4& parentColor);
 
-
 	virtual void updateColor(){};
-
 
 	void setOnEnterCallback(const std::function<void()>& callback){ m_onEnterCallback = callback; }
 	void setOnExitCallback(const std::function<void()>& callback){ m_onExitCallback = callback; }
 
 	const std::function<void()>& getOnEnterCallback() const{ return m_onEnterCallback; }
 	const std::function<void()>& getOnExitCallback() const{ return m_onExitCallback; }
-
 
 protected:
 	Node();

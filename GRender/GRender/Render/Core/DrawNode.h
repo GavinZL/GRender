@@ -69,6 +69,12 @@ public:
 	/**override draw func*/
 	virtual void draw(Renderer* renderer, const Mat4& transform, unsigned int flags) override;
 
+	/**更新box*/
+	void updateBox(const Vec3& min, const Vec3& max);
+
+protected:
+	void fillBox(const Vec3& min, const Vec3& max);
+
 protected:
 
 	/**标记*/

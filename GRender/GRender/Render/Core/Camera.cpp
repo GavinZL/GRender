@@ -218,6 +218,11 @@ void Camera::lookAt(const Vec3& target, const Vec3& up)
 	m_up = up;
 }
 
+Mat3 Camera::getLookAtMatrix(const Vec3& target, const Vec3& up)
+{
+	return G::createLookAtMatrix3(m_position, target, up == Vec3::Zero() ? m_up : up);
+}
+
 const Mat4& Camera::getProjectionMatrix() const
 {
 	return m_projection;
@@ -340,7 +345,37 @@ void Camera::translateWorld(const Vec3& world)
 	m_transformDirty = true;
 }
 
-void Camera::unproject(const Vec2& viewport, Vec3* src, Vec3* dst) const
-{
 
+Vec3 Camera::getMousePointToWorld(int xx, int yy, int width, int height)
+{
+	// screen coord ---> ndc coord
+	float x = (2.0f * xx) / width - 1.0f;
+	float y = 1.0f - (2.0f * yy) / height;
+	float z = 1.0f;	// 默认为远裁剪面
+
+	// ndc coord ---> clip coord
+	// 主要是齐次形式
+	Vec4 rayClip = Vec4(x, y, z, 1.0f);
+
+	// clip coord ---> camera coord
+	// multi inverse (projection )
+	Vec4 rayCam = this->m_projection.inverse() * rayClip;
+
+	// camera coord ---> world coord
+	// multi inverse (viewmatrix)
+	Vec4 rayWorld = this->m_viewInv * rayCam;
+
+	// div w
+	if (rayWorld[3] != 0.f){
+		rayWorld[0] /= rayWorld[3];
+		rayWorld[1] /= rayWorld[3];
+		rayWorld[2] /= rayWorld[3];
+	}
+
+	Vec3 dst(rayWorld[0], rayWorld[1], rayWorld[2]);
+
+	Vec3 dir(dst - this->m_position);
+	dir.normalize();
+
+	return dir;
 }

@@ -17,6 +17,8 @@ NAMESPACE_BEGIN
 class Mesh;
 class Renderer;
 
+class DrawNode;
+
 class MeshNode  : public Node
 {
 public:
@@ -39,6 +41,7 @@ public:
 
 	virtual void draw(Renderer* renderer, const Mat4& transform, unsigned int flags) override;
 
+	virtual void setBoundingBoxColor(const Color3& color) override;
 public:
 
 	/**选择shader类型*/
@@ -50,15 +53,26 @@ public:
 	void setLightMask(unsigned int mask) { m_lightMask = mask; }
 	unsigned int getLightMask() const { return m_lightMask; }
 
+	/**隐藏boungding box*/
+	virtual void hideBoundingBox(bool b) override;
+
+	/**返回boundingbox 状态*/
+	virtual bool boundingBoxVisible() override{ return m_aabbVisiable; }
+
+	virtual void updateBoundingBox() override;
+
 protected:
 	/**update aabb box */
-	bool m_aabbDirty;
+	bool m_aabbVisiable;
 
 	unsigned int                 m_lightMask;
 	bool                         m_shaderUsingLight; // is current shader using light ?
 
 	/** default one mesh*/
 	Mesh* m_mesh;
+
+	/** 显示aabb*/
+	DrawNode* m_boxNode;
 };
 
 NAMESPACE_END

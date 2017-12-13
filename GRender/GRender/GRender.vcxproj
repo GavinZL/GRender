@@ -188,6 +188,7 @@
     <ClCompile Include="Render\Core\MeshNode.cpp" />
     <ClCompile Include="Render\Core\Node.cpp" />
     <ClCompile Include="Render\Core\Picker.cpp" />
+    <ClCompile Include="Render\Core\Ray.cpp" />
     <ClCompile Include="Render\Core\Ref.cpp" />
     <ClCompile Include="Render\Core\RenderCommand.cpp" />
     <ClCompile Include="Render\Core\Renderer.cpp" />
@@ -279,6 +280,7 @@
     <ClInclude Include="Render\Core\MeshNode.h" />
     <ClInclude Include="Render\Core\Node.h" />
     <ClInclude Include="Render\Core\Picker.h" />
+    <ClInclude Include="Render\Core\Ray.h" />
     <ClInclude Include="Render\Core\Ref.h" />
     <ClInclude Include="Render\Core\RenderCommand.h" />
     <ClInclude Include="Render\Core\Renderer.h" />

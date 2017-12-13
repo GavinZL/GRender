@@ -149,6 +149,9 @@
     <ClCompile Include="Render\Core\Picker.cpp">
       <Filter>Render\Core</Filter>
     </ClCompile>
+    <ClCompile Include="Render\Core\Ray.cpp">
+      <Filter>Render\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="GRender.h">
@@ -262,6 +265,9 @@
       <Filter>Render\Core</Filter>
     </ClInclude>
     <ClInclude Include="Render\Core\Picker.h">
+      <Filter>Render\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Core\Ray.h">
       <Filter>Render\Core</Filter>
     </ClInclude>
   </ItemGroup>

@@ -2,7 +2,6 @@
 
 #include "GLWindow.h"
 #include "GRender.h"
-
 #include <QPainter>
 #include <QWheelEvent>
 
@@ -19,6 +18,9 @@ GLWindow::GLWindow(QWidget* parent/* = nullptr*/)
 	, m_midDragging(false)
 	, m_isAltPressed(false)
 	, m_parent(nullptr)
+	, m_isCtrlPressed(false)
+	, m_selectNode(nullptr)
+	, m_isSelectAssist(false)
 {
 
 	m_parent = (GRender*)parent;
@@ -50,11 +52,6 @@ void GLWindow::initializeGL()
 {
 	// OpenGL initialize
 	m_engine = G::Engine::getInstance();
-
-	//glEnable(GL_POLYGON_SMOOTH_HINT);
-	//glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
-	//glShadeModel(GL_SMOOTH);
-	//glEnable(GL_LIGHTING);
 
 	// let us put the timer update init to here
 	m_updateTimer = new QTimer(this);
@@ -107,6 +104,9 @@ void GLWindow::keyPressEvent(QKeyEvent *e)
 	case Qt::Key_Alt:
 		m_isAltPressed = true;
 		break;
+	case Qt::Key_Control:
+		m_isCtrlPressed = true;
+		break;
 	default:
 		break;
 	}
@@ -120,8 +120,6 @@ void GLWindow::keyReleaseEvent(QKeyEvent *e)
 		m_isAltPressed = false;
 		if (m_parent->getPicker()){
 			m_parent->getPicker()->setEnable(false);
-
-			// pick
 			m_parent->getPicker()->pickedRectangle(G::NodeFlag::_MESH);
 		}
 		break;
@@ -129,7 +127,6 @@ void GLWindow::keyReleaseEvent(QKeyEvent *e)
 	case Qt::Key_Delete:
 	{
 		if (m_parent->getPicker()){
-			// delete
 			m_parent->getPicker()->deleteVertics();
 		}
 	}
@@ -137,7 +134,6 @@ void GLWindow::keyReleaseEvent(QKeyEvent *e)
 	case Qt::Key_R:
 	{
 		if (m_parent->getPicker()){
-			// restore
 			m_parent->getPicker()->restoreVertices();
 		}
 	}
@@ -145,7 +141,6 @@ void GLWindow::keyReleaseEvent(QKeyEvent *e)
 	case Qt::Key_I:
 	{
 		if (m_parent->getPicker()){
-			// inverse color
 			static bool forward = true;
 			m_parent->getPicker()->inverseColor(forward);
 			forward = !forward;
@@ -155,11 +150,14 @@ void GLWindow::keyReleaseEvent(QKeyEvent *e)
 	case Qt::Key_C:
 	{
 		if (m_parent->getPicker()){
-			// inverse color
 			m_parent->getPicker()->restoreColor();
 		}
 	}
 	break;
+	case Qt::Key_Control:
+		m_isCtrlPressed = false;
+		m_isSelectAssist = false;
+		break;
 	default:
 		break;
 	}
@@ -173,6 +171,11 @@ void GLWindow::mousePressEvent(QMouseEvent *e)
 	{
 		m_dragging = true;
 		m_dragStartPoint = e->pos();
+
+		if (m_isCtrlPressed && !m_isSelectAssist){
+			rayPickNode(m_dragStartPoint.x(), m_dragStartPoint.y());
+			m_isSelectAssist = true;
+		}
 	}
 		break;
 
@@ -229,9 +232,16 @@ void GLWindow::mouseMoveEvent(QMouseEvent *e)
 			float dy = static_cast<float>(-m_cameraSensitivity) *
 				(static_cast<float>(m_dragEndPoint.y()) - static_cast<float>(m_dragStartPoint.y()));
 
-			m_engine->getRunningScene()->setCameraPitch(-dx);
-			m_engine->getRunningScene()->setCameraYaw(dy);
-
+			// 旋转选中目标
+			if (m_isCtrlPressed && m_selectNode){
+				G::Vec3 rot( dy, -dx, 0);
+				m_selectNode->setRotationLocal(rot);
+			}
+			else{
+				// 旋转相机
+				m_engine->getRunningScene()->setCameraPitch(-dx);
+				m_engine->getRunningScene()->setCameraYaw(dy);
+			}
 			m_dragStartPoint = m_dragEndPoint;
 		}
 		else if (m_midDragging){
@@ -242,7 +252,16 @@ void GLWindow::mouseMoveEvent(QMouseEvent *e)
 			float dy = static_cast<float>(m_cameraMoveSensitivity)*
 				(static_cast<float>(m_dragEndPoint.y()) - static_cast<float>(m_dragStartPoint.y()));
 
-			m_engine->getRunningScene()->setCameraTrans(G::Vec3(-dx, dy, 0));
+			// 移动选中目标
+			if (m_isCtrlPressed && m_selectNode){
+				G::Vec3 offset(-dx, -dy, 0);
+				offset *= 0.5;
+				m_selectNode->setPositionLocal(offset);
+			}
+			else{
+				// 移动相机
+				m_engine->getRunningScene()->setCameraTrans(G::Vec3(-dx, dy, 0));
+			}
 			m_dragStartPoint = m_dragEndPoint;
 		}
 	}
@@ -264,4 +283,28 @@ void GLWindow::wheelEvent(QWheelEvent *e)
 void GLWindow::mouseDoubleClickEvent(QMouseEvent *e)
 {
 
+}
+
+//  [12/13/2017 Administrator]
+
+
+void GLWindow::rayPickNode(int x, int y)
+{
+	G::Vec3 dir = m_engine->getRunningScene()->getDefaultCamera()->getMousePointToWorld(x, y, width(), height());
+	G::Vec3 pos = m_engine->getRunningScene()->getDefaultCamera()->getPosition();
+
+	G::Ray ray(pos, dir);
+
+	std::vector<G::Node*> meshNodes;
+	m_engine->getRunningScene()->visit(m_engine->getRunningScene(), &ray, meshNodes, G::_MESH);
+
+	// 如果之前选中的节点，在重新选中时要恢复之前的颜色
+	if (m_selectNode != nullptr){
+		m_selectNode->setBoundingBoxColor(G::Color3(1.0, 1.0, 1.0));
+	}
+
+	if (meshNodes.size() > 0){
+		m_selectNode = meshNodes[0];
+		m_selectNode->setBoundingBoxColor(G::Color3(1.0, 0.0, 0.0));
+	}
 }

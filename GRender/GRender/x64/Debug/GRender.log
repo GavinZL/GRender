@@ -1,3 +1,2 @@
-﻿  Mesh.cpp
-Render\Core\Mesh.cpp(3): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+﻿  Node.cpp
   GRender.vcxproj -> E:\SVN\ESpace\GRender\x64\Debug\GRender.exe

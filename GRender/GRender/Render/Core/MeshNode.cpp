@@ -15,6 +15,9 @@
 #include "Engine.h"
 #include "Scene.h"
 #include "Light.h"
+#include "DrawNode.h"
+
+#include "AABB.h"
 
 #include "../Comm/Utils.h"
 
@@ -24,6 +27,8 @@ MeshNode::MeshNode()
 	: m_mesh(nullptr)
 	, m_lightMask(-1)
 	, m_shaderUsingLight(false)
+	, m_aabbVisiable(true)
+	, m_boxNode(nullptr)
 {
 	m_nodeFlagMask = _MESH;
 }
@@ -54,22 +59,7 @@ bool MeshNode::initMesh(const std::string& modelPath)
 	IOManager::getInstance()->loadModelFromFile(modelPath,
 		vs, ns, cs, ts, is, texturePath);
 
-	//Texture2D* tex = nullptr;
-	//if (!texturePath.empty()){
-	//	Image* img = new (std::nothrow)Image();
-	//	img->initWithImageFile(texturePath);
-	//	
-	//	tex = new(std::nothrow) Texture2D();
-	//	tex->initWithImage(img);
-	//}
-
-	bool b = initMesh(vs, ns, cs, ts, is,texturePath);
-
-	//if (m_mesh && tex){
-	//	m_mesh->setTexture2D(tex);
-	//}
-
-	return b;
+	return initMesh(vs, ns, cs, ts, is,texturePath);
 }
 
 bool MeshNode::initMesh(const std::vector<Vec3>& position,
@@ -86,10 +76,43 @@ bool MeshNode::initMesh(const std::vector<Vec3>& position,
 
 	m_mesh = Mesh::create(position, normals, colors, texs, indics,texturePath);
 
-	//// 
 	genGLProgramState(true);
 
+	// Ìí¼ÓÒ»¸öbox
+	if (m_mesh && m_mesh->getAABB()){
+		m_aabb = m_mesh->getAABB();
+
+		m_boxNode = new (std::nothrow)DrawNode();
+		m_boxNode->init(DrawNode::Type::BOX, nullptr);
+		m_boxNode->drawBox(m_aabb->_min, m_aabb->_max, 2);
+		this->addChild(m_boxNode);
+	}
 	return true;
+}
+
+
+void MeshNode::hideBoundingBox(bool b)
+{
+	m_aabbVisiable = b;
+	if (m_boxNode != nullptr){
+		m_boxNode->setVisible(b);
+	}
+}
+
+void MeshNode::setBoundingBoxColor(const Color3& color)
+{
+	m_aabbVisiable = true;
+	if (nullptr != m_boxNode){
+		m_boxNode->setDisplayColor(color);
+		m_boxNode->setVisible(m_aabbVisiable);
+	}
+}
+
+void MeshNode::updateBoundingBox()
+{
+	if (m_aabb && m_boxNode){
+		m_boxNode->updateBox(m_aabb->_min, m_aabb->_max);
+	}
 }
 
 void MeshNode::draw(Renderer* renderer, const Mat4& transform, unsigned int flags)

@@ -148,19 +148,25 @@ void Scene::updateCamera(float deta)
 	m_defaultDirLight->setDirection(dir);
 }
 
+Mat3  Scene::getCameraLookAtMatrix(const Vec3& targetPos , const Vec3& up)
+{
+	return m_defaultCamera->getLookAtMatrix(targetPos, up);
+}
+
 void Scene::setCameraTrans(const Vec3& v)
 { 
 	float factor = m_defaultCamera->getCameraToCenter().norm();
 
 	Vec3 mv = v;
-	if (factor < 100){
+	/*if (factor < 100){
 		mv *= 0.01;
 	}
 	else
 	{
 		mv *= factor * 0.001;
 	}
-
+	*/
+	mv *= factor * 0.001;
 	m_defaultCamera->translateLocal(mv);
 }
 

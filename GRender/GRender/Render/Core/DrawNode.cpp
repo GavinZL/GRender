@@ -19,7 +19,7 @@ DrawNode::DrawNode()
 , m_pointSize(1)
 , m_lineWidth(1)
 {
-
+	m_displayColor = (Vec4::Ones());
 }
 
 DrawNode::~DrawNode()
@@ -64,6 +64,10 @@ bool DrawNode::init(Type _type, void* params)
 
 void DrawNode::draw(Renderer* renderer, const Mat4& transform, unsigned int flags)
 {
+	if (!m_visible){
+		return;
+	}
+
 	// ##judged whether call drawxxx function
 	if (m_initialized)
 	{
@@ -81,7 +85,8 @@ void DrawNode::onDraw(const Mat4& transform, unsigned int flags)
 	glProgram->use();
 	glProgram->setUniformsForBuiltins(transform);
 
-	glProgram->setUniformLocationWith4f(glProgram->getUniformLocation(GLProgram::UNIFORM_NAME_DISPLAYCOLOR), 1.0f, 1.0f, 1.0f, 1.0f);
+	glProgram->setUniformLocationWith4f(glProgram->getUniformLocation(GLProgram::UNIFORM_NAME_DISPLAYCOLOR), 
+		m_displayColor[0], m_displayColor[1], m_displayColor[2], 1.0f);
 
 	glPointSize(m_pointSize);
 	glLineWidth(m_lineWidth);
@@ -241,72 +246,7 @@ void DrawNode::drawBox(const Vec3& min, const Vec3& max, const float lineSize)
 {
 	m_lineWidth = lineSize;
 
-	m_vertices.resize(24);
-	//
-	m_vertices[0] = Vec3(min[0], min[1], min[2]);
-	m_vertices[1] = Vec3(min[0], min[1], max[2]);
-
-	m_vertices[2] = Vec3(min[0], min[1], min[2]);
-	m_vertices[3] = Vec3(max[0], min[1], min[2]);
-
-	m_vertices[4] = Vec3(min[0], min[1], min[2]);
-	m_vertices[5] = Vec3(min[0], max[1], min[2]);
-
-	//
-	m_vertices[6] = Vec3(max[0], min[1], max[2]);
-	m_vertices[7] = Vec3(min[0], min[1], max[2]);
-
-	m_vertices[8] = Vec3(max[0], min[1], max[2]);
-	m_vertices[9] = Vec3(max[0], max[1], max[2]);
-
-	m_vertices[10] = Vec3(max[0], min[1], max[2]);
-	m_vertices[11] = Vec3(max[0], min[1], min[2]);
-
-	//
-	m_vertices[12] = Vec3(min[0], max[1], max[2]);
-	m_vertices[13] = Vec3(min[0], min[1], max[2]);
-
-	m_vertices[14] = Vec3(min[0], max[1], max[2]);
-	m_vertices[15] = Vec3(min[0], max[1], min[2]);
-
-	m_vertices[16] = Vec3(min[0], max[1], max[2]);
-	m_vertices[17] = Vec3(max[0], max[1], max[2]);
-
-	// 
-	m_vertices[18] = Vec3(max[0], max[1], min[2]);
-	m_vertices[19] = Vec3(min[0], max[1], min[2]);
-
-	m_vertices[20] = Vec3(max[0], max[1], min[2]);
-	m_vertices[21] = Vec3(max[0], min[1], min[2]);
-
-	m_vertices[22] = Vec3(max[0], max[1], min[2]);
-	m_vertices[23] = Vec3(max[0], max[1], max[2]);
-
-	m_colors.resize(24);
-	m_colors[0] = Vec4(1, 1, 0, 1);
-	m_colors[1] = Vec4(1, 1, 0, 1);
-	m_colors[2] = Vec4(1, 1, 0, 1);
-	m_colors[3] = Vec4(1, 1, 0, 1);
-	m_colors[4] = Vec4(1, 1, 0, 1);
-	m_colors[5] = Vec4(1, 1, 0, 1);
-	m_colors[6] = Vec4(1, 1, 0, 1);
-	m_colors[7] = Vec4(1, 1, 0, 1);
-	m_colors[8] = Vec4(1, 1, 0, 1);
-	m_colors[9] = Vec4(1, 1, 0, 1);
-	m_colors[10] = Vec4(1, 1, 0, 1);
-	m_colors[11] = Vec4(1, 1, 0, 1);
-	m_colors[12] = Vec4(1, 1, 0, 1);
-	m_colors[13] = Vec4(1, 1, 0, 1);
-	m_colors[14] = Vec4(1, 1, 0, 1);
-	m_colors[15] = Vec4(1, 1, 0, 1);
-	m_colors[16] = Vec4(1, 1, 0, 1);
-	m_colors[17] = Vec4(1, 1, 0, 1);
-	m_colors[18] = Vec4(1, 1, 0, 1);
-	m_colors[19] = Vec4(1, 1, 0, 1);
-	m_colors[20] = Vec4(1, 1, 0, 1);
-	m_colors[21] = Vec4(1, 1, 0, 1);
-	m_colors[22] = Vec4(1, 1, 0, 1);
-	m_colors[23] = Vec4(1, 1, 0, 1);
+	fillBox(min, max);
 
 	glGenBuffers(1, &m_vertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
@@ -317,6 +257,18 @@ void DrawNode::drawBox(const Vec3& min, const Vec3& max, const float lineSize)
 	glBufferData(GL_ARRAY_BUFFER, sizeof(Vec4) * m_colors.size(), &m_colors[0], GL_STATIC_DRAW);
 
 	m_initialized = true;
+}
+
+void DrawNode::updateBox(const Vec3& min, const Vec3& max)
+{
+	fillBox(min, max);
+
+	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Vec3) * m_vertices.size(), &m_vertices[0]);
+
+	glBindBuffer(GL_ARRAY_BUFFER, m_colorBuffer);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Vec4) * m_colors.size(), &m_colors[0]);
+
 }
 
 void DrawNode::drawCube(const Vec3& min, const Vec3& max)
@@ -400,4 +352,75 @@ void DrawNode::drawSphere(const float raduis)
 void DrawNode::drawScanner()
 {
 
+}
+
+//  [12/13/2017 Administrator]
+void DrawNode::fillBox(const Vec3& min, const Vec3& max)
+{
+	m_vertices.resize(24);
+	//
+	m_vertices[0] = Vec3(min[0], min[1], min[2]);
+	m_vertices[1] = Vec3(min[0], min[1], max[2]);
+
+	m_vertices[2] = Vec3(min[0], min[1], min[2]);
+	m_vertices[3] = Vec3(max[0], min[1], min[2]);
+
+	m_vertices[4] = Vec3(min[0], min[1], min[2]);
+	m_vertices[5] = Vec3(min[0], max[1], min[2]);
+
+	//
+	m_vertices[6] = Vec3(max[0], min[1], max[2]);
+	m_vertices[7] = Vec3(min[0], min[1], max[2]);
+
+	m_vertices[8] = Vec3(max[0], min[1], max[2]);
+	m_vertices[9] = Vec3(max[0], max[1], max[2]);
+
+	m_vertices[10] = Vec3(max[0], min[1], max[2]);
+	m_vertices[11] = Vec3(max[0], min[1], min[2]);
+
+	//
+	m_vertices[12] = Vec3(min[0], max[1], max[2]);
+	m_vertices[13] = Vec3(min[0], min[1], max[2]);
+
+	m_vertices[14] = Vec3(min[0], max[1], max[2]);
+	m_vertices[15] = Vec3(min[0], max[1], min[2]);
+
+	m_vertices[16] = Vec3(min[0], max[1], max[2]);
+	m_vertices[17] = Vec3(max[0], max[1], max[2]);
+
+	// 
+	m_vertices[18] = Vec3(max[0], max[1], min[2]);
+	m_vertices[19] = Vec3(min[0], max[1], min[2]);
+
+	m_vertices[20] = Vec3(max[0], max[1], min[2]);
+	m_vertices[21] = Vec3(max[0], min[1], min[2]);
+
+	m_vertices[22] = Vec3(max[0], max[1], min[2]);
+	m_vertices[23] = Vec3(max[0], max[1], max[2]);
+
+	m_colors.resize(24);
+	m_colors[0] = Vec4(1, 1, 0, 1);
+	m_colors[1] = Vec4(1, 1, 0, 1);
+	m_colors[2] = Vec4(1, 1, 0, 1);
+	m_colors[3] = Vec4(1, 1, 0, 1);
+	m_colors[4] = Vec4(1, 1, 0, 1);
+	m_colors[5] = Vec4(1, 1, 0, 1);
+	m_colors[6] = Vec4(1, 1, 0, 1);
+	m_colors[7] = Vec4(1, 1, 0, 1);
+	m_colors[8] = Vec4(1, 1, 0, 1);
+	m_colors[9] = Vec4(1, 1, 0, 1);
+	m_colors[10] = Vec4(1, 1, 0, 1);
+	m_colors[11] = Vec4(1, 1, 0, 1);
+	m_colors[12] = Vec4(1, 1, 0, 1);
+	m_colors[13] = Vec4(1, 1, 0, 1);
+	m_colors[14] = Vec4(1, 1, 0, 1);
+	m_colors[15] = Vec4(1, 1, 0, 1);
+	m_colors[16] = Vec4(1, 1, 0, 1);
+	m_colors[17] = Vec4(1, 1, 0, 1);
+	m_colors[18] = Vec4(1, 1, 0, 1);
+	m_colors[19] = Vec4(1, 1, 0, 1);
+	m_colors[20] = Vec4(1, 1, 0, 1);
+	m_colors[21] = Vec4(1, 1, 0, 1);
+	m_colors[22] = Vec4(1, 1, 0, 1);
+	m_colors[23] = Vec4(1, 1, 0, 1);
 }

@@ -49,6 +49,9 @@ public:
 	/**更新相机*/
 	void updateCamera(float deta);
 
+	// 返回相机看向目标点的矩阵
+	Mat3 getCameraLookAtMatrix(const Vec3& targetPos, const Vec3& up = Vec3::Zero());
+
 protected:
 	Scene();
 	virtual ~Scene();
