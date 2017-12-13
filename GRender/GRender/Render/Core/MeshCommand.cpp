@@ -115,6 +115,8 @@ void MeshCommand::execute()
 		return;
 	}
 
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+
 	// 1.
 	applyRenderState();
 

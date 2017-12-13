@@ -53,6 +53,9 @@ public:
 	/**恢复颜色*/
 	void restoreColor();
 
+	/**反转选择*/
+	void inverseColor(bool forward);
+
 protected:
 
 	// ##window size, [0]: width, [1]: height

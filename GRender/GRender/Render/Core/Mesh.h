@@ -74,17 +74,17 @@ public:
 	inline bool hasNormal(){ return m_normals.size() > 0; }
 	inline bool hasTexture(){ return m_textures.size() > 0; }
 	inline bool hasColor(){ return m_colors.size() > 0; }
-	inline bool hasIndics(){ return m_indics.size() > 0; }
+	inline bool hasIndics(){ return  m_indics.size() > 0; }
 
-	inline int getIndexCount(){ return m_indics.size(); }
-	inline int getVertexCount(){ return m_vertics.size(); }
+	inline int getIndexCount(){ return m_indicsCount; }
+	inline int getVertexCount(){ return m_vertexCount; }
 	inline GLuint getPrimitive(){ return m_primitive; }
 
-	inline std::vector<Vec3>& getVertics() { return m_vertics; }
-	inline std::vector<Vec3>& getNormals() { return m_normals; }
-	inline std::vector<Vec4>& getColors(){ return m_colors; }
-	inline std::vector<Vec2>& getTextures(){ return m_textures; }
-	inline std::vector<unsigned int>& getIndics(){ return m_indics; }
+	inline std::vector<Vec3>& getVertics() { return m_verticsBak; }
+	inline std::vector<Vec3>& getNormals() { return m_normalsBak; }
+	inline std::vector<Vec4>& getColors(){ return m_colorsBak; }
+	inline std::vector<Vec2>& getTextures(){ return m_texturesBak; }
+	inline std::vector<unsigned int>& getIndics(){ return m_indicsBak; }
 
 	/** 对mesh进行编辑操作 [包括： 修改点颜色， 删点等]*/
 	// ##修改指定索引的颜色值
@@ -94,7 +94,7 @@ public:
 	void flashColor();
 
 	// ##反选颜色
-	void inverseColor();
+	void inverseColor(bool forward = true);
 
 	// ##恢复原始颜色值
 	void resetColor();
@@ -176,6 +176,11 @@ protected:
 
 	// 存储有修改的顶点索引
 	std::vector<unsigned int> m_modifyVerticsIndex;
+
+
+	// ##顶点 和 三角索引数量
+	unsigned int m_vertexCount;
+	unsigned int m_indicsCount;
 
 	// 
 	GLuint m_primitive;

@@ -142,6 +142,24 @@ void GLWindow::keyReleaseEvent(QKeyEvent *e)
 		}
 	}
 	break;
+	case Qt::Key_I:
+	{
+		if (m_parent->getPicker()){
+			// inverse color
+			static bool forward = true;
+			m_parent->getPicker()->inverseColor(forward);
+			forward = !forward;
+		}
+	}
+	break;
+	case Qt::Key_C:
+	{
+		if (m_parent->getPicker()){
+			// inverse color
+			m_parent->getPicker()->restoreColor();
+		}
+	}
+	break;
 	default:
 		break;
 	}

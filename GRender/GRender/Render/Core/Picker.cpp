@@ -319,5 +319,20 @@ void Picker::restoreColor()
 
 		Mesh *nMesh = nNode->getMesh();
 		nMesh->resetColor();
+		nMesh->flashColor();
+	}
+}
+
+void Picker::inverseColor(bool forward)
+{
+	for (int n = 0, ncnt = m_pickedNodes.size(); n < ncnt; ++n){
+		MeshNode* nNode = dynamic_cast<MeshNode*>(m_pickedNodes[n]);
+		if (nNode == nullptr || nNode->getMesh() == nullptr){
+			break;
+		}
+
+		Mesh *nMesh = nNode->getMesh();
+		nMesh->inverseColor(forward);
+		nMesh->flashColor();
 	}
 }

@@ -1,9 +1,3 @@
-﻿  GLWindow.cpp
-  GRender.cpp
-  moc_GRender.cpp
-  Mesh.cpp
+﻿  Mesh.cpp
 Render\Core\Mesh.cpp(3): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-  Picker.cpp
-  main.cpp
-  Generating Code...
   GRender.vcxproj -> E:\SVN\ESpace\GRender\x64\Debug\GRender.exe
