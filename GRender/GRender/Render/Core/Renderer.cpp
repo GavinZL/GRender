@@ -104,6 +104,8 @@ void Renderer::addCommand(RenderCommand* command)
 {
 	int renderQueue = m_commandGroupStack.top();
 	this->addCommand(command, renderQueue);
+
+	//G::log("$$$ : %d , %d\n", renderQueue, command->getType());
 }
 
 void Renderer::addCommand(RenderCommand* command, int renderQueueId)
@@ -124,16 +126,16 @@ void Renderer::addCommand(RenderCommand* command, int renderQueueId)
 
 void Renderer::pushGroup(int renderQueueID)
 {
-	if (m_isRendering){
+	//if (m_isRendering){
 		m_commandGroupStack.push(renderQueueID);
-	}
+	//}
 }
 
 void Renderer::popGroup()
 {
-	if (m_isRendering){
+	//if (m_isRendering){
 		m_commandGroupStack.pop();
-	}
+	//}
 }
 
 int Renderer::createRenderQueue()

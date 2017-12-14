@@ -192,6 +192,7 @@
     <ClCompile Include="Render\Core\Ref.cpp" />
     <ClCompile Include="Render\Core\RenderCommand.cpp" />
     <ClCompile Include="Render\Core\Renderer.cpp" />
+    <ClCompile Include="Render\Core\RenderTexture.cpp" />
     <ClCompile Include="Render\Core\Scene.cpp" />
     <ClCompile Include="Render\Core\Texture2D.cpp" />
     <ClCompile Include="Render\GLStateCache.cpp" />
@@ -284,6 +285,7 @@
     <ClInclude Include="Render\Core\Ref.h" />
     <ClInclude Include="Render\Core\RenderCommand.h" />
     <ClInclude Include="Render\Core\Renderer.h" />
+    <ClInclude Include="Render\Core\RenderTexture.h" />
     <ClInclude Include="Render\Core\Scene.h" />
     <ClInclude Include="Render\Core\Texture2D.h" />
     <ClInclude Include="Render\GDefine.h" />

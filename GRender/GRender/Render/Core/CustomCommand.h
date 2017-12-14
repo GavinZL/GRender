@@ -23,7 +23,7 @@ public:
 
 public:
 
-	void init(int priority);
+	void init(int priority=0);
 	void execute();
 
 	inline bool isTranslucent() { return false; }

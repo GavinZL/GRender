@@ -17,6 +17,7 @@ class GRender;
 
 NAMESPACE_BEGIN
 class Node;
+class RenderTexture;
 NAMESPACE_END
 
 class GLWindow : public QOpenGLWidget
@@ -79,6 +80,11 @@ private:
 	bool m_isCtrlPressed;
 	bool m_isSelectAssist;
 	G::Node* m_selectNode;	// …‰œﬂ—°÷–node
+
+
+	// render texture
+	G::RenderTexture* m_renderTexture;
+
 };
 
 

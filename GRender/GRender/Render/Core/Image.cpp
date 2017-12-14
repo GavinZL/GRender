@@ -2179,7 +2179,7 @@ bool Image::initWithRawData(const unsigned char * data, ssize_t dataLen, int wid
 }
 
 
-#if (CC_TARGET_PLATFORM != CC_PLATFORM_IOS)
+//#if (CC_TARGET_PLATFORM != CC_PLATFORM_IOS)
 bool Image::saveToFile(const std::string& filename, bool isToRGB)
 {
     //only support for Texture2D::PixelFormat::RGB888 or Texture2D::PixelFormat::RGBA8888 uncompressed data
@@ -2194,7 +2194,9 @@ bool Image::saveToFile(const std::string& filename, bool isToRGB)
     do 
     {
 
-        CC_BREAK_IF(filename.size() <= 4);
+		if (filename.size() <= 4){
+			break;
+		}
 
         std::string strLowerCasePath(filename);
         for (unsigned int i = 0; i < strLowerCasePath.length(); ++i)
@@ -2204,11 +2206,15 @@ bool Image::saveToFile(const std::string& filename, bool isToRGB)
 
         if (std::string::npos != strLowerCasePath.find(".png"))
         {
-            CC_BREAK_IF(!saveImageToPNG(filename, isToRGB));
+			if (!saveImageToPNG(filename, isToRGB)){
+				break;
+			}
         }
         else if (std::string::npos != strLowerCasePath.find(".jpg"))
         {
-            CC_BREAK_IF(!saveImageToJPG(filename));
+			if (!saveImageToJPG(filename)){
+				break;
+			}
         }
         else
         {
@@ -2220,7 +2226,7 @@ bool Image::saveToFile(const std::string& filename, bool isToRGB)
 
     return ret;
 }
-#endif
+//#endif
 
 bool Image::saveImageToPNG(const std::string& filePath, bool isToRGB)
 {

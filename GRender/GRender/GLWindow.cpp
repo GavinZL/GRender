@@ -21,6 +21,7 @@ GLWindow::GLWindow(QWidget* parent/* = nullptr*/)
 	, m_isCtrlPressed(false)
 	, m_selectNode(nullptr)
 	, m_isSelectAssist(false)
+	, m_renderTexture(nullptr)
 {
 
 	m_parent = (GRender*)parent;
@@ -106,6 +107,32 @@ void GLWindow::keyPressEvent(QKeyEvent *e)
 		break;
 	case Qt::Key_Control:
 		m_isCtrlPressed = true;
+		break;
+
+		// test render texture 
+	case Qt::Key_F1:
+	{
+		// äÖÈ¾µ½ÎÆÀí
+		if (nullptr == m_renderTexture){
+			m_renderTexture = G::RenderTexture::create(width(), height());
+		}
+
+		G::log("----------------------------------------------------\n");
+		m_renderTexture->beginWithClearColor(G::Vec4(1.f,0.f,0.f,1.f));
+		m_engine->getRunningScene()->visit(m_engine->getRenderer(), G::Mat4::Identity(), 0);
+		m_renderTexture->end();
+		G::log("----------------------------------------------------\n");
+
+	}
+		break;
+
+	case Qt::Key_F2:
+	{
+		// ´æ´¢Í¼Ïñ
+		if (m_renderTexture != nullptr){
+			m_renderTexture->saveToFile("rt.jpg", G::Image::Format::JPG);
+		}
+	}
 		break;
 	default:
 		break;

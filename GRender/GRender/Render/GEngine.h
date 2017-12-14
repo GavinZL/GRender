@@ -37,6 +37,7 @@
 #include "Core/AABB.h"
 #include "Core/Image.h"
 #include "Core/Texture2D.h"
+#include "Core/RenderTexture.h"
 
 
 #endif
