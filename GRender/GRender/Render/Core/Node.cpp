@@ -146,49 +146,27 @@ void Node::setRotationLocal(const Vec3& rot)
 	Scene* _scene = getScene();
 	if (_scene == nullptr)
 		return;
-	
-	float angle = m_rotation.norm();
-	Vec3 rot_axis = m_rotation.normalized();
-	Angle_Axis AA = Angle_Axis(angle, rot_axis);
-	//Mat3 mrot = AA.toRotationMatrix();
-	Vec3 realV = AA.axis();
 
 	Mat3 mrot = _scene->getCameraLookAtMatrix(m_position);
 	Vec3 xaxis = Vec3(mrot.data()[0], mrot.data()[3], mrot.data()[6]);
 	Vec3 yaxis = Vec3(mrot.data()[1], mrot.data()[4], mrot.data()[7]);
 	Vec3 zaxis = Vec3(mrot.data()[2], mrot.data()[5], mrot.data()[8]);
 
-	Angle_Axis x_axis(DEG_TO_RAD(rot[0]), xaxis);
-	realV = x_axis * realV;
+	Vec3 offset(Vec3::Zero());
+	if (rot[0] != 0.f){
+		Angle_Axis x_axis(DEG_TO_RAD(rot[0]), xaxis);
+		offset += x_axis.axis() * x_axis.angle();
+	}
+	if (rot[1] != 0.f){
+		Angle_Axis y_axis(DEG_TO_RAD(rot[1]), yaxis);
+		offset += y_axis.axis() * y_axis.angle();
+	}
+	if (rot[2] != 0.f){
+		Angle_Axis z_axis(DEG_TO_RAD(rot[2]), zaxis);
+		offset += z_axis.axis() * z_axis.angle();
+	}
 
-	Angle_Axis a_axis = Angle_Axis(DEG_TO_RAD(rot[1]), yaxis);
-	realV = a_axis * realV;
-
-	/*
-	G::Mat3 _view;
-	_view.setZero();
-
-	_view.data()[0] = xaxis(0);
-	_view.data()[1] = yaxis(0);
-	_view.data()[2] = zaxis(0);
-
-	_view.data()[3] = xaxis(1);
-	_view.data()[4] = yaxis(1);
-	_view.data()[5] = zaxis(1);
-
-	_view.data()[6] = xaxis(2);
-	_view.data()[7] = yaxis(2);
-	_view.data()[8] = zaxis(2);
-
-	Angle_Axis r_axis(_view);
-	Vec3 ax = r_axis.axis() * r_axis.angle();
-	*/
-
-	m_rotation = realV * AA.angle();
-	
-	//m_rotation[0] += DEG_TO_RAD(rot[0]);
-	//m_rotation[1] += DEG_TO_RAD(rot[1]);
-	//m_rotation[2] += DEG_TO_RAD(rot[2]);
+	m_rotation += offset;
 
 	m_transformUpdated = true;
 	m_transformDirty = true;
@@ -196,6 +174,7 @@ void Node::setRotationLocal(const Vec3& rot)
 	//// ##更新aabb的位置
 	//if (m_aabb != nullptr){
 	//	m_aabb->transform(getNodeToWorldTransform());
+	//	//m_aabb->rotationOffset(m_rotation);
 	//	updateBoundingBox();
 	//}
 }

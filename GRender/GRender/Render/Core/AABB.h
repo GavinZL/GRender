@@ -89,6 +89,10 @@ public:
 	*/
 	void transformOffset(const Vec3& offset);
 
+	/**
+	* ÈÆ×ÅÐý×ªÖáÐý×ª
+	*/
+	void rotationOffset(const Vec3& AA);
 
 public:
 	Vec3 _min;

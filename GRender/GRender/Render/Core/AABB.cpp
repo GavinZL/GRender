@@ -185,13 +185,20 @@ void AABB::transform(const Mat4& mat)
 	corners[7] = Vec3(_min[0], _max[1], _min[2]);
 
 	// Transform the corners, recalculate the min and max points along the way.
+	//Mat4 mmat = mat;
+	//mmat.data()[12] = mmat.data()[13] = mmat.data()[14] = 0.0f;
 	for (int i = 0; i < 8; i++){
 		//mat.transformPoint(&corners[i]);
-		Vec4 v = Vec4(corners[i][0], corners[i][1], corners[i][2], 1.0);
-		Vec4 vv = mat * v;
-		corners[i][0] = vv[0];
-		corners[i][1] = vv[1];
-		corners[i][2] = vv[2];
+		//Vec4 v = Vec4(corners[i][0], corners[i][1], corners[i][2], 1.0);
+		//Vec4 vv = mat * v;
+		//corners[i][0] = vv[0];
+		//corners[i][1] = vv[1];
+		//corners[i][2] = vv[2];
+
+		corners[i][0] = corners[i][0] * mat.data()[0] + corners[i][1] * mat.data()[4] + corners[i][2] * mat.data()[8] + 1.0f * mat.data()[12];
+		corners[i][1] = corners[i][0] * mat.data()[1] + corners[i][1] * mat.data()[5] + corners[i][2] * mat.data()[9] + 1.0f * mat.data()[13];
+		corners[i][2] = corners[i][0] * mat.data()[2] + corners[i][1] * mat.data()[6] + corners[i][2] * mat.data()[10] + 1.0f * mat.data()[14];
+
 	}
 
 	reset();
@@ -226,6 +233,43 @@ void AABB::transformOffset(const Vec3& offset)
 	for (int i = 0; i < 8; i++){
 		//mat.transformPoint(&corners[i]);
 		corners[i] += offset;
+	}
+
+	reset();
+
+	updateMinMax(corners, 8);
+}
+
+void AABB::rotationOffset(const Vec3& AA)
+{
+	Vec3 corners[8];
+	// Near face, specified counter-clockwise
+	// Left-top-front.
+	corners[0] = Vec3(_min[0], _max[1], _max[2]);
+	// Left-bottom-front.
+	corners[1] = Vec3(_min[0], _min[1], _max[2]);
+	// Right-bottom-front.
+	corners[2] = Vec3(_max[0], _min[1], _max[2]);
+	// Right-top-front.
+	corners[3] = Vec3(_max[0], _max[1], _max[2]);
+
+	// Far face, specified clockwise
+	// Right-top-back.
+	corners[4] = Vec3(_max[0], _max[1], _min[2]);
+	// Right-bottom-back.
+	corners[5] = Vec3(_max[0], _min[1], _min[2]);
+	// Left-bottom-back.
+	corners[6] = Vec3(_min[0], _min[1], _min[2]);
+	// Left-top-back.
+	corners[7] = Vec3(_min[0], _max[1], _min[2]);
+
+	// Transform the corners, recalculate the min and max points along the way.
+	float angle = AA.norm();
+	Vec3 axis = AA.normalized();
+	Angle_Axis AAX(angle,axis);
+
+	for (int i = 0; i < 8; i++){
+		corners[i] = AAX * corners[i];
 	}
 
 	reset();
