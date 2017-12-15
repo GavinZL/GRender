@@ -21,6 +21,9 @@ GRender::GRender(QWidget *parent)
 	this->setCentralWidget(m_glWindow);
 
 	this->setAcceptDrops(true);
+
+	this->initToolBar();
+
 	
 	/**#等待opengl窗口初始化完成*/
 	connect(m_glWindow, &GLWindow::sigOpenGLInitialized, [this]()

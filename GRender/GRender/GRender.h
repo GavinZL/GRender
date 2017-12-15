@@ -7,10 +7,9 @@
 #include <QDropEvent>
 #include <QResizeEvent>
 
-#include "Render/Core/Picker.h"
+#include "Render/GEngine.h"
 
 class GLWindow;
-
 
 class GRender : public QMainWindow
 {
@@ -35,6 +34,12 @@ private:
 
 	//Ê°È¡½áµã
 	G::Picker* m_picker;
+
+private:
+	QToolBar *m_toolBar;
+	QAction *m_testButton;
+
+	void initToolBar();
 };
 
 #endif // GRENDER_H

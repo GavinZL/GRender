@@ -256,7 +256,6 @@ bool RenderTexture::saveToFile(const std::string& filename, Image::Format format
 	return true;
 }
 
-
 bool RenderTexture::initWithWidthAndHeight(int w, int h, Texture2D::PixelFormat format, GLuint depthStencilFormat)
 {
 	// get old frame buffer id
@@ -285,6 +284,13 @@ bool RenderTexture::initWithWidthAndHeight(int w, int h, Texture2D::PixelFormat 
 		return false;
 	}
 	m_texture->initWithData(data, dataLen, m_pixelFormat, powW, powH);
+
+	if (!GLEW_ARB_framebuffer_object)
+	{
+		// OpenGL 2.1 doesn't require this, 3.1+ does
+		G::log("Your GPU does not provide frame buffer objects. Use a texture instead.");
+		return false;
+	}
 
 	GLint oldRBO;
 	glGetIntegerv(GL_RENDERBUFFER_BINDING, &oldRBO);
@@ -319,7 +325,6 @@ bool RenderTexture::initWithWidthAndHeight(int w, int h, Texture2D::PixelFormat 
 
 	return true;
 }
-
 
 //  [12/14/2017 Administrator]
 void RenderTexture::onClear()
@@ -392,7 +397,7 @@ void RenderTexture::onSaveToFile(const std::string& filename, bool isRgb)
 {
 	Image *image = newImage();
 	if (image){
-		image->saveToFile(filename, isRgb);
+		image->saveToFile(filename, !isRgb);
 	}
 	if (m_saveFileCallback){
 		m_saveFileCallback(this, filename);

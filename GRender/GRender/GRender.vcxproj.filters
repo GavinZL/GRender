@@ -155,6 +155,9 @@
     <ClCompile Include="Render\Core\RenderTexture.cpp">
       <Filter>Render\Core</Filter>
     </ClCompile>
+    <ClCompile Include="GRender_Toolbar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="GRender.h">

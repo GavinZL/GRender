@@ -166,6 +166,7 @@
     </ClCompile>
     <ClCompile Include="GLWindow.cpp" />
     <ClCompile Include="GRender.cpp" />
+    <ClCompile Include="GRender_Toolbar.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Render\Comm\MathFunction.cpp" />
     <ClCompile Include="Render\Comm\TimeUtils.cpp" />
