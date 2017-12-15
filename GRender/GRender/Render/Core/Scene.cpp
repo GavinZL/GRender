@@ -143,9 +143,11 @@ void Scene::updateCamera(float deta)
 	m_yaw = 0;
 
 	// ##实时更新默认平行光的位置
-	Vec3 dir = m_defaultCamera->getCameraToCenter();
-	dir.normalize();
-	m_defaultDirLight->setDirection(dir);
+	if (m_defaultDirLight){
+		Vec3 dir = m_defaultCamera->getCameraToCenter();
+		dir.normalize();
+		m_defaultDirLight->setDirection(dir);
+	}
 }
 
 Mat3  Scene::getCameraLookAtMatrix(const Vec3& targetPos , const Vec3& up)

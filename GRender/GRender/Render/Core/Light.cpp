@@ -7,7 +7,7 @@ USING_NAMESPACE_G;
 Light::Light()
 	: m_intensity(1.0)
 	, m_enabled(true)
-	, m_lightFlag(LIGHT0)
+	, m_lightFlag((unsigned int)LIGHT0)
 {
 	m_nodeFlagMask = _LIGHT;
 }

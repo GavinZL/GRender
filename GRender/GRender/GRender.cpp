@@ -28,6 +28,8 @@ GRender::GRender(QWidget *parent)
 	/**#等待opengl窗口初始化完成*/
 	connect(m_glWindow, &GLWindow::sigOpenGLInitialized, [this]()
 	{
+		G::log("----");
+
 		G::Scene *scene = G::Scene::create();
 
 		G::DrawNode *drawNode = new G::DrawNode();

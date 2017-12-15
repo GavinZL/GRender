@@ -32,6 +32,8 @@ Node::Node()
 , m_userData(nullptr)
 , m_nodeFlagMask(_DEFAUT)
 , m_priority(0)
+, m_displayOpacity(1.0f)
+, m_displayColor(1.f, 1.0f, 1.0f, 1.0f)
 {
 	m_transform.setIdentity();
 	m_modelViewTransform.setIdentity();

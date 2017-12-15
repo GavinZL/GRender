@@ -11,6 +11,7 @@
 
 #include "RenderCommand.h"
 #include "GLProgram.h"
+#include "Light.h"
 
 NAMESPACE_BEGIN
 

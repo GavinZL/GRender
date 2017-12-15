@@ -589,15 +589,6 @@ bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat
 
     const PixelFormatInfo& info = _pixelFormatInfoTables.at(pixelFormat);
 
-    //if (info.compressed && !Configuration::getInstance()->supportsPVRTC()
-    //                    && !Configuration::getInstance()->supportsETC()
-    //                    && !Configuration::getInstance()->supportsS3TC()
-    //                    && !Configuration::getInstance()->supportsATITC())
-    //{
-    //    G::log("cocos2d: WARNING: PVRTC/ETC images are not supported");
-    //    return false;
-    //}
-
     //Set the row align only when mipmapsNum == 1 and the data is uncompressed
     if (mipmapsNum == 1 && !info.compressed)
     {
@@ -647,19 +638,6 @@ bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
 
-#if CC_ENABLE_CACHE_TEXTURE_DATA
-    if (_antialiasEnabled)
-    {
-        TexParams texParams = {(GLuint)(_hasMipmaps?GL_LINEAR_MIPMAP_NEAREST:GL_LINEAR),GL_LINEAR,GL_NONE,GL_NONE};
-        VolatileTextureMgr::setTexParameters(this, texParams);
-    } 
-    else
-    {
-        TexParams texParams = {(GLuint)(_hasMipmaps?GL_NEAREST_MIPMAP_NEAREST:GL_NEAREST),GL_NEAREST,GL_NONE,GL_NONE};
-        VolatileTextureMgr::setTexParameters(this, texParams);
-    }
-#endif
-
     //CHECK_GL_ERROR_DEBUG(); // clean possible GL error
     
     // Specify OpenGL texture image
@@ -671,19 +649,7 @@ bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat
         unsigned char *data = mipmaps[i].address;
         GLsizei datalen = mipmaps[i].len;
 
-        if (info.compressed)
-        {
-            glCompressedTexImage2D(GL_TEXTURE_2D, i, info.internalFormat, (GLsizei)width, (GLsizei)height, 0, datalen, data);
-        }
-        else
-        {
-            glTexImage2D(GL_TEXTURE_2D, i, info.internalFormat, (GLsizei)width, (GLsizei)height, 0, info.format, info.type, data);
-        }
-
- /*       if (i > 0 && (width != height || ccNextPOT(width) != width ))
-        {
-            G::log("cocos2d: Texture2D. WARNING. Mipmap level %u is not squared. Texture won't render correctly. width=%d != height=%d", i, width, height);
-        }*/
+        glTexImage2D(GL_TEXTURE_2D, i, info.internalFormat, (GLsizei)width, (GLsizei)height, 0, info.format, info.type, data);
 
         GLenum err = glGetError();
         if (err != GL_NO_ERROR)

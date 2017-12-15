@@ -53,7 +53,7 @@ MeshCommand::MeshCommand()
 , m_depthWriteEnabled(false)
 , m_isTextureRenderer(false)
 , m_cullFace(GL_BACK)
-, m_lightMask(0)
+, m_lightMask(LIGHTMASK)
 , m_mesh(nullptr)
 {
 	m_type = RenderCommand::Type::MESH_COMMAND;
@@ -115,8 +115,6 @@ void MeshCommand::execute()
 		return;
 	}
 
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
-
 	// 1.
 	applyRenderState();
 
@@ -126,9 +124,10 @@ void MeshCommand::execute()
 	glProgram->setUniformsForBuiltins(m_mv);
 
 	glProgram->setUniformLocationWith1i(glProgram->getUniformLocation("G_hasTexture"), m_mesh->hasTexture() ? 1 : 0 );
-	glProgram->setUniformLocationWith1i(glProgram->getUniformLocation("G_hasLights"),  1);
-
-	if (Engine::getInstance()->getRunningScene()->getLigths().size() > 0){
+	
+	int lightSize = Engine::getInstance()->getRunningScene()->getLigths().size();	
+	glProgram->setUniformLocationWith1i(glProgram->getUniformLocation("G_hasLights"), lightSize);
+	if (lightSize > 0){
 		setLightUniforms();
 	}
 
@@ -247,11 +246,11 @@ void MeshCommand::setLightUniforms()
 		GLint enabledDirLightNum = 0;
 		GLint enabledPointLightNum = 0;
 		GLint enabledSpotLightNum = 0;
-		Vec3 ambientColor = Vec3::Zero();
+		Vec3 ambientColor = Vec3(0.1,0.1,0.1);
 
 		for (const auto& light : lights){
 			bool useLight = light->isEnable() &&
-				((unsigned int)light->getLightFlag() & m_lightMask);
+				(light->getLightFlag() & m_lightMask);
 
 			if (useLight){
 				float intensity = light->getIntensity();
@@ -356,6 +355,8 @@ void MeshCommand::setLightUniforms()
 		//ambient
 		glProgram->setUniformLocationWith3f(glProgram->getUniformLocation(s_ambientLightUniformColorName),
 			ambientColor[0], ambientColor[1], ambientColor[2]);
+
+		//G::log("%f, %f, %f \n", ambientColor[0], ambientColor[1], ambientColor[2]);
 	}
 	else
 	{

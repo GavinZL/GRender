@@ -25,18 +25,19 @@ USING_NAMESPACE_G;
 
 MeshNode::MeshNode()
 	: m_mesh(nullptr)
-	, m_lightMask(-1)
 	, m_shaderUsingLight(false)
 	, m_aabbVisiable(true)
 	, m_boxNode(nullptr)
 {
 	m_nodeFlagMask = _MESH;
+	m_lightMk = LIGHTMASK;
 }
 
 MeshNode::MeshNode(const std::string& filePath)
 	: m_mesh(nullptr)
 {
 	m_nodeFlagMask = _MESH;
+	m_lightMk = LIGHTMASK;
 	initMesh(filePath);
 }
 
@@ -127,19 +128,17 @@ void MeshNode::draw(Renderer* renderer, const Mat4& transform, unsigned int flag
 	
 	Color4 c = getDisplayColor();
 
-	const auto& lights = Engine::getInstance()->getRunningScene()->getLigths();
-	bool usingLigth = false;
-	for (const auto& light : lights){
-		usingLigth = ((unsigned int)light->getLightFlag() & m_lightMask) > 0;
-		if (usingLigth){
-			break;
-		}
-	}
+	//const auto& lights = Engine::getInstance()->getRunningScene()->getLigths();
+	//bool usingLigth = false;
+	//for (const auto& light : lights){
+	//	usingLigth = ((unsigned int)light->getLightFlag() & m_lightMask) > 0;
+	//	if (usingLigth){
+	//		break;
+	//	}
+	//}
 
-	// shader
-	if (usingLigth != m_shaderUsingLight){
-		genGLProgramState(usingLigth);
-	}
+	//// shader
+	//genGLProgramState(usingLigth);
 
 	auto programSt = m_mesh->getGLProgramState();
 	auto meshCommand = m_mesh->getMeshCommand();
@@ -147,7 +146,7 @@ void MeshNode::draw(Renderer* renderer, const Mat4& transform, unsigned int flag
 	bool isTransparent = false;//(m_mesh->isTransparent() || c[3] < 1.0f);
 
 	meshCommand->init(m_mesh, transform, m_priority);
-	meshCommand->setLightMask(m_lightMask);
+	meshCommand->setLightMask(m_lightMk);
 	meshCommand->setDisplayColor(c);
 	meshCommand->setTransparent(isTransparent);
 
@@ -168,13 +167,13 @@ void MeshNode::genGLProgramState(bool useLight)
 	const char* shader = nullptr;
 
 	// 目前默认 有 顶点，法线，颜色
-	//if (m_mesh->hasTexture()){
-		shader = GLProgram::SHADER_NAME_POSITION_NORMAL_TEXTURE_COLOR;
-	//}
-	//else
-	//{
-	//	shader = GLProgram::SHADER_NAME_POSITION_NORMAL_COLOR;
-	//}
+	if (m_mesh->hasTexture()){
+		shader = GLProgram::SHADER_NAME_POSITION_NORMAL_TEXTURE;
+	}
+	else
+	{
+		shader = GLProgram::SHADER_NAME_POSITION_NORMAL_COLOR;
+	}
 
 	m_mesh->setGLProgramState(GLProgramState::getOrCreateWithGLProgramName(shader));
 }

@@ -15,11 +15,11 @@ const char* shader_Position_Color_frag = "shader/position_color_frag.shader";
 const char* shader_Position_Texture_Color_vert = "shader/position_color_vert.shader";
 const char* shader_Position_Texture_Color_frag = "shader/position_color_frag.shader";
 
-const char* shader_Position_Normal_Color_vert = "shader/position_normal_color_vert.shader";
-const char* shader_Position_Normal_Color_frag = "shader/position_normal_color_frag.shader";
+const char* shader_Position_Normal_Color_vert = "shader/position_normal_color_vert2.shader";
+const char* shader_Position_Normal_Color_frag = "shader/position_normal_color_frag2.shader";
 
-const char* shader_Position_Normal_Texture_vert = "shader/position_normal_texture_vert.shader";
-const char* shader_Position_Normal_Texture_frag = "shader/position_normal_texture_frag.shader";
+const char* shader_Position_Normal_Texture_vert = "shader/position_normal_texture_vert2.shader";
+const char* shader_Position_Normal_Texture_frag = "shader/position_normal_texture_frag2.shader";
 
 const char* shader_Position_Normal_Texture_Color_vert = "shader/position_normal_color_texture_vert.shader";
 const char* shader_Position_Normal_Texture_Color_frag = "shader/position_normal_color_texture_frag.shader";

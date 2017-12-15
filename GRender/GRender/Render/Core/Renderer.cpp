@@ -74,6 +74,7 @@ static const int DEFAULT_RENDER_QUEUE = 0;
 
 Renderer::Renderer()
 	: m_isRendering(false)
+	, m_glViewAssigned(true)
 {
 	// default initialize
 	m_commandGroupStack.push(DEFAULT_RENDER_QUEUE);
@@ -160,7 +161,6 @@ void Renderer::render()
 	m_isRendering = true;
 
 	if (m_glViewAssigned){
-
 		// sort
 		for (auto &renderqueue : m_renderGroups){
 			renderqueue.sort();

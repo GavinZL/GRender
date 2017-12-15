@@ -10,6 +10,7 @@
 #include "../Comm/Macors.h"
 
 #include "Node.h"
+#include "Light.h"
 #include "CustomCommand.h"
 
 NAMESPACE_BEGIN
@@ -49,9 +50,10 @@ public:
 
 	/** light mask getter & setter, light works only when _lightmask & light's flag is true, 
 	* default value of _lightmask is 0xffff 
+	* 设置当前 节点， 接收那一盏 或那几盏的灯光[默认是所有灯光都接收]
 	*/
-	void setLightMask(unsigned int mask) { m_lightMask = mask; }
-	unsigned int getLightMask() const { return m_lightMask; }
+	void setLightMask(unsigned int mask) { m_lightMk = mask; }
+	unsigned int getLightMask() const { return m_lightMk; }
 
 	/**隐藏boungding box*/
 	virtual void hideBoundingBox(bool b) override;
@@ -65,7 +67,7 @@ protected:
 	/**update aabb box */
 	bool m_aabbVisiable;
 
-	unsigned int                 m_lightMask;
+	unsigned int                 m_lightMk;
 	bool                         m_shaderUsingLight; // is current shader using light ?
 
 	/** default one mesh*/

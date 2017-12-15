@@ -27,7 +27,8 @@ void IOManager::loadModelFromFile(const std::string& filepath,
 	}
 
 	Assimp::Importer importer;
-	const aiScene* scene = importer.ReadFile(filepath, aiProcessPreset_TargetRealtime_Fast | aiProcess_FlipUVs);
+	const aiScene* scene = importer.ReadFile(filepath, /*aiProcessPreset_TargetRealtime_Fast*/    
+		aiProcess_Triangulate |	aiProcess_GenUVCoords  | aiProcess_GenSmoothNormals | aiProcess_FlipUVs);
 
 	if (nullptr == scene){
 		G::log("Error : %s -> %s \n", filepath.c_str(), importer.GetErrorString());
@@ -67,6 +68,7 @@ void IOManager::loadModelFromFile(const std::string& filepath,
 			// color
 			const aiColor4D* col = mesh->HasVertexColors(0) ? &(mesh->mColors[0][j]) : &zeroColor;
 			colors[vCnt + j] = Vec4(col->r, col->g, col->b, col->a);
+
 			// texture
 			if (mesh->HasTextureCoords(0)){
 				const aiVector3D* tex = &(mesh->mTextureCoords[0][j]);

@@ -223,7 +223,6 @@ void Engine::mainLoop()
 	}
 
 	//updateCamera(m_deltaTime);
-
 	drawScene();
 }
 

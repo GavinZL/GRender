@@ -30,8 +30,20 @@ enum LightFlag
 	LIGHT4 = 1 << 4,
 	LIGHT5 = 1 << 5,
 	LIGHT6 = 1 << 6,
-	LIGHT7 = 1 << 7
+	LIGHT7 = 1 << 7,
+	LIGHTMASK = LIGHT0 | LIGHT1 | LIGHT2 | LIGHT3 | LIGHT4 | LIGHT5 | LIGHT6 | LIGHT7
 };
+
+//#define  LIGHT0  1
+//#define  LIGHT1  (1 << 1)
+//#define  LIGHT2  (1 << 2)
+//#define  LIGHT3  (1 << 3)
+//#define  LIGHT4  (1 << 4)
+//#define  LIGHT5  (1 << 5)
+//#define  LIGHT6  (1 << 6)
+//#define  LIGHT7  (1 << 7)
+//#define  LIGHTMASK  (LIGHT0 | LIGHT1 | LIGHT2 | LIGHT3 | LIGHT4 | LIGHT5 | LIGHT6 | LIGHT7)
+
 
 //  [12/7/2017 Administrator]
 class Light : public Node
@@ -48,8 +60,8 @@ public:
 	inline void setIntensity(float i) { m_intensity = i; }
 
 	// setter or getter flag
-	inline LightFlag getLightFlag() const { return m_lightFlag; }
-	inline void setLightFlag(LightFlag flag) { m_lightFlag = flag; }
+	inline unsigned int getLightFlag() const { return m_lightFlag; }
+	inline void setLightFlag(unsigned int flag) { m_lightFlag = flag; }
 
 	// getter or setter enabled
 	inline void setEnable(bool enable){ m_enabled = enable; }
@@ -62,7 +74,7 @@ public:
 
 protected:
 	float m_intensity;
-	LightFlag m_lightFlag;
+	unsigned int m_lightFlag;
 	bool m_enabled;
 
 };

@@ -12,9 +12,6 @@ in vec3 inter_vertex;
 // out normal
 in vec3 inter_Normal;
 
-// out texture coords
-in vec2 inter_texCoord;
-
 // out color
 in vec4 inter_Color;
 
@@ -38,14 +35,8 @@ uniform float G_spotLightSourceRangeInverse[8];
 //ambient
 uniform vec3 G_ambientLightSourceColor;
 
-// texture
-uniform sampler2D G_texture0;
-
 // is light
 uniform int G_hasLights;
-
-// is texture
-uniform int G_hasTexture;
 
 out vec4 fragColor;
 
@@ -58,9 +49,9 @@ vec3 computeLighting(vec3 normalVector,vec3 vertexPos, vec3 lightDirection, vec3
 
 	float diffuse = dot(normalVector, lightDirection);
 	
-	//vec3 color = lightColor * max(diffuse, 0.0) * attenuation;
+	vec3 color = lightColor * max(diffuse, 0.0) * attenuation;
 	
-	
+	/*
 	if (diffuse > 0)
 	{
 		diffuseColor = vec4(diffuse);
@@ -72,13 +63,13 @@ vec3 computeLighting(vec3 normalVector,vec3 vertexPos, vec3 lightDirection, vec3
 		float factor = dot(eyePos, lightReflect);
 		if (factor > 0)
 		{
-			specucolor = vec4(0.3, 0.3, 0.3, 1.0) * vec4(pow(factor, 16));
+			specucolor = vec4(pow(factor, 16));
 		}
 	}
 
 	vec3 color = (diffuseColor + specucolor).xyz * lightColor * attenuation;
 	
-	
+	*/
 	return color;
 }
 
@@ -133,18 +124,5 @@ void main(void)
 		
 	}
 	
-	if (G_hasTexture == 1){
-		vec4 texCol = texture2D(G_texture0, inter_texCoord);
-		/*
-		if(texCol.xyz == vec3(0.0)){
-			fragColor =  vec4(inter_Color.xyz,1.0) * combinedColor;
-		}else{
-			fragColor =  vec4(inter_Color.xyz,1.0) * combinedColor * texCol;	
-		}*/
-		fragColor =  vec4(1.0,0.0,0.0,1.0);//combinedColor * texCol;
-	}
-	else{
-		fragColor =  inter_Color * combinedColor;
-	}
-	
+	fragColor =  inter_Color * combinedColor;	
 }

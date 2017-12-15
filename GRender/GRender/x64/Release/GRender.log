@@ -1,1 +1,4 @@
-﻿
+﻿  IOManager.cpp
+e:\svn\espace\grender\3rdparty\eigen\src/Core/arch/CUDA/Half.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
+  GRender.vcxproj -> E:\SVN\ESpace\GRender\x64\Release\GRender.exe
